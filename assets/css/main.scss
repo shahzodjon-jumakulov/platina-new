@@ -1,0 +1,11 @@
+@import "~/assets/fonts/fonts.css";
+
+body {
+  background: #F5F9FD;
+  font-family: "SF Pro Display", sans-serif;
+  overflow: overlay;
+
+  .dark & {
+    @apply bg-dark-blue;
+  }
+}

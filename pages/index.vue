@@ -1,0 +1,9 @@
+<script setup>
+//
+</script>
+
+<template>
+  <div class="flex flex-col gap-5">
+    <h1>Hello, World!</h1>
+  </div>
+</template>

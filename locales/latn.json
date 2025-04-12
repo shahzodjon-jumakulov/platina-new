@@ -1,0 +1,133 @@
+{
+  "hello": "Salom",
+  "news": "Yangiliklar",
+  "pinned": "Muhim yangiliklar",
+  "latest": "So‘nggi yangiliklar",
+  "popular": "Ommabop yangiliklar",
+  "latest_short": "So‘nggi",
+  "popular_short": "Ommabop",
+  "more_news": "Ko‘proq yangiliklar",
+  "all": "Barchasi",
+  "share": "Ulashish",
+  "copied": "Nusxa olindi",
+  "copy": "Havoladan nusxa olish",
+  "prevPost": "Avvalgi yangilik",
+  "nextPost": "Keyingi yangilik",
+  "articles": "Maqolalar",
+  "videos": "Videolar",
+  "video": "Video",
+  "similar": "Mavzuga oid",
+  "more": "Yana yuklash",
+  "business": "Biznes",
+  "watch_on_telegram": "Telegramda kuzatib boring!",
+  "soc_media_pages": "Ijtimoiy tarmoqlardagi rasmiy sahifalar",
+  "dark_mode": "Tungi rejim",
+  "download_app": "Ilovamizni yuklab olish",
+  "error": {
+    "title": "Bunday sahifa mavjud emas :(",
+    "back": "Asosiy sahifaga o‘ting",
+    "otherNews": "Yoki boshqa yangiliklar bilan tanishing:"
+  },
+  "staffs": {
+    "bobur": {
+      "name": "Bobur Jalolov",
+      "position": "Bosh muharrir"
+    },
+    "abulfayz": {
+      "name": "Abulfayz Sayidasqarov",
+      "position": "Muharrir"
+    },
+    "murodjon": {
+      "name": "Murodjon Mahmudov",
+      "position": "Grafik dizayner"
+    },
+    "adhamjon": {
+      "name": "Adhamjon Saxodullayev",
+      "position": "Montaj ustasi"
+    },
+    "dilnoza": {
+      "name": "Dilnoza Yusupova",
+      "position": "Muxbir"
+    },
+    "ulugbek": {
+      "name": "Ulug‘bek Oripov",
+      "position": "Kontent-menejer"
+    },
+    "mirodil": {
+      "name": "Mirodil Ortiqov",
+      "position": "Dasturchi"
+    },
+    "shahzod": {
+      "name": "Shahzodjon Jumakulov",
+      "position": "Dasturchi"
+    },
+    "samandar": {
+      "name": "Samandar Maxamadjonov",
+      "position": "Dasturchi"
+    },
+    "sevara": {
+      "name": "Sevara Sultanmurodova",
+      "position": "SMM mutaxassis"
+    }
+  },
+  "prompt": {
+    "title": "Platina.uz ilovasini o‘rnatish",
+    "desc": "Tez va oson kirish uchun ushbu ilovani o‘rnating.",
+    "cancel": "Bekor qilish",
+    "install": "O‘rnatish"
+  },
+  "search": {
+    "placeholder": "Sayt bo‘ylab qidiruv...",
+    "results": "Qidiruv natijalariga o‘tish",
+    "count": "Qidiruv natijalari: {count} ta"
+  },
+  "sort": {
+    "latest": "Yangi xabarlar",
+    "popular": "Ommabop"
+  },
+  "filter": {
+    "title": "Sarlavhadan qidiruv"
+  },
+  "footer": {
+    "about": "Sayt haqida",
+    "reklama": "Reklama",
+    "team": "Platina jamoasi",
+    "info": [
+      " Platina.uz. Barcha huquqlar himoyalangan. «Platina.uz» saytida joylangan ma'lumotlar muallifning shaxsiy fikri. Saytda joylangan har qanday materiallardan yozma ruxsatsiz foydalanish ta'qiqlanadi.",
+      "O‘zbekiston Respublikasi Prezidenti Administratsiyasi huzuridagi Axborot va ommaviy kommunikatsiyalar agentligi tomonidan 02.12.2022 sanasida №051412 sonli guvohnoma bilan OAV sifatida roʻyxatga olingan.",
+      "{name} saytida reklama joylashtirish masalasida {phone} telefon raqamiga (Telegram: {telegram}) murojaat qiling. Tahririyat bilan aloqa: {email}"
+    ],
+    "sticky": {
+      "main": "Asosiy",
+      "latest": "Lenta",
+      "popular": "Ommabop"
+    }
+  },
+  "time": {
+    "now": "hozirgina",
+    "minutesBefore": " daqiqa avval",
+    "hoursBefore": " soat avval",
+    "yesterday": "Kecha",
+    "today": "Bugun",
+    "daysBefore": " kun avval",
+    "year": " yil"
+  },
+  "month": [
+    "-yanvar",
+    "-fevral",
+    "-mart",
+    "-aprel",
+    "-may",
+    "-iyun",
+    "-iyul",
+    "-avgust",
+    "-sentabr",
+    "-oktabr",
+    "-noyabr",
+    "-dekabr"
+  ],
+  "meta": {
+    "title": "Platina.uz — eksklyuziv yangiliklar, muhim voqealar va sifatli tahlillar manbasi",
+    "desc": "O‘zbekiston va jahon yangiliklarini birinchi bo‘lib bizda o‘qing!"
+  }
+}

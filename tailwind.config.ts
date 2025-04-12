@@ -8,6 +8,7 @@ export default <Partial<Config>>{
   theme: {
     extend: {
       colors: {
+        secondary: "#0066CC1A",
         white: {
           DEFAULT: "#ffffff",
           100: "#FFFFFF0F",

@@ -4,6 +4,6 @@
 
 <template>
   <div class="flex flex-col gap-5">
-    <h1>Hello, World!</h1>
+    <!-- <h1>{{ $t("hello") }}</h1> -->
   </div>
 </template>

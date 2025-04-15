@@ -1,9 +1,12 @@
 <script setup>
-//
+import Hero from "~/components/Section/Main/Hero.vue";
 </script>
 
 <template>
-  <div class="flex flex-col gap-5">
-    <!-- <h1>{{ $t("hello") }}</h1> -->
-  </div>
+  <UContainer>
+    <h1 class="sr-only">{{ $t("meta.title") }}</h1>
+    <div class="flex flex-col gap-5 sm:py-5">
+      <Hero />
+    </div>
+  </UContainer>
 </template>

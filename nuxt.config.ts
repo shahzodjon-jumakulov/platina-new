@@ -5,6 +5,12 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@nuxtjs/i18n"],
   css: ["~/assets/css/main.scss"],
 
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BASE_URL,
+    },
+  },
+
   i18n: {
     vueI18n: "~/i18n.config.ts",
     locales: ["uz", "o'z"],
@@ -20,13 +26,6 @@ export default defineNuxtConfig({
     bundle: {
       optimizeTranslationDirective: false,
     },
-    // detectBrowserLanguage: {
-    //   useCookie: true,
-    //   cookieKey: 'i18n_locale',
-    //   fallbackLocale: 'uz',
-    //   alwaysRedirect: true, // redirects to locale version
-    //   redirectOn: 'root', // only redirect at the root (/) route
-    // },
     lazy: true,
 
   },

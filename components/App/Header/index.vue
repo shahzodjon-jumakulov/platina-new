@@ -25,9 +25,7 @@
           </div>
         </div>
 
-        <div class="max-lg:hidden">
-          <!-- Categories nav -->
-        </div>
+        <AppHeaderNav />
       </div>
     </UContainer>
   </header>

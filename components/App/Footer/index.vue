@@ -117,7 +117,7 @@ const texts = computed(() => [
             >
               <component
                 :is="item.component"
-                class="w-8 h-8 text-primary dark:text-primary-100"
+                class="size-8 pointer-events-none"
               ></component>
             </NuxtLink>
           </div>
@@ -136,7 +136,7 @@ const texts = computed(() => [
 
         <div class="flex items-center justify-between">
           <div class="relative hexagon">
-            <IconHexagon />
+            <IconHexagonLg />
             <span class="absolute-center">18+</span>
           </div>
 

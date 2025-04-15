@@ -2,11 +2,19 @@
 @import "~/assets/css/tlwnd.css";
 
 body {
-  background: #F5F9FD;
+  background: #f5f9fd;
   font-family: "SF Pro Display", sans-serif;
   overflow: overlay;
 
   .dark & {
     @apply bg-dark-blue;
   }
+}
+
+.title {
+  @apply font-medium text-black dark:text-white-600 !leading-std;
+}
+
+.short-content {
+  @apply text-black-500 dark:text-white-500;
 }

@@ -89,7 +89,7 @@ const texts = computed(() => [
 
 <template>
   <AppFooterNav />
-  
+
   <footer class="bg-white dark:bg-white-100 max-md:hidden">
     <UContainer class="py-7">
       <div class="flex flex-col gap-5">
@@ -98,7 +98,7 @@ const texts = computed(() => [
             <IconLogo />
             <div class="flex">
               <NuxtLinkLocale
-                class="nav-link"
+                class="px-5 py-3.5 rounded-lg text-black dark:text-white font-medium hover:bg-black-100 dark:hover:bg-white-100"
                 v-for="item in links"
                 :key="item.id"
                 :to="item.to"
@@ -137,7 +137,10 @@ const texts = computed(() => [
         <div class="flex items-center justify-between">
           <div class="relative hexagon">
             <IconHexagonLg />
-            <span class="absolute-center">18+</span>
+            <span
+              class="absolute-center text-sm text-blue-500 dark:text-white-500 font-semibold leading-[normal]"
+              >18+</span
+            >
           </div>
 
           <AppFooterAppLinks />
@@ -148,15 +151,7 @@ const texts = computed(() => [
 </template>
 
 <style scoped lang="scss">
-.nav-link {
-  @apply px-5 py-3.5 rounded-lg text-black dark:text-white font-medium hover:bg-black-100 dark:hover:bg-white-100;
-}
-
-.content:deep(a) {
+.content ::v-deep a {
   @apply whitespace-nowrap text-light-blue hover:text-light-blue-600 dark:text-light-blue-dark dark:hover:text-light-blue-dark-600 transition-colors;
-}
-
-.hexagon span {
-  @apply text-sm text-blue-500 dark:text-white-500 font-semibold leading-[normal];
 }
 </style>

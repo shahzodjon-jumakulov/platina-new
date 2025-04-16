@@ -12,7 +12,7 @@ body {
 }
 
 .title {
-  @apply font-medium text-black dark:text-white-600 !leading-std;
+  @apply font-medium !leading-std text-black dark:text-white-600 group-hover:text-light-blue dark:group-hover:text-light-blue-dark;
 }
 
 .short-content {

@@ -12,11 +12,11 @@ const props = defineProps({
   },
 });
 
-const date = $moment(props.date).local();
+const localDate = $moment(props.date).local();
 const isLatn = $moment.locale() === "uz-latn";
 
 const tooltipText = computed(() =>
-  date.format(`D${isLatn ? "-" : " "}MMMM YYYY, H:m:s`)
+  localDate.format(`D${isLatn ? "-" : " "}MMMM YYYY, H:m:s`)
 );
 </script>
 
@@ -24,6 +24,10 @@ const tooltipText = computed(() =>
   <div class="flex items-center gap-2 text-xs leading-std">
     <span class="text-light-blue">{{ category }}</span>
     <IconDot />
-    <time :datetime="date" class="text-black-400">{{ date }}</time>
+    <UTooltip :text="tooltipText" :popper="{ placement: 'top' }">
+      <time :datetime="date" class="text-black-400 dark:text-white-400">
+        {{ $formatDate(localDate) }}
+      </time>
+    </UTooltip>
   </div>
 </template>

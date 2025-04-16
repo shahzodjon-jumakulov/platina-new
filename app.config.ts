@@ -3,7 +3,7 @@ export default defineAppConfig({
     primary: "indigo",
     container: {
       padding: "px-0 md:px-5 lg:px-8",
-      constrained: "max-w-7xl mx-auto",
+      constrained: "max-w-[30rem] md:max-w-3xl lg:max-w-7xl mx-auto",
     },
     button: {
       base: "transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current",
@@ -32,5 +32,6 @@ export default defineAppConfig({
         base: "border-light-blue-100 dark:border-light-blue-dark-100",
       },
     },
+    tooltip: { background: "bg-white dark:bg-dark-blue" },
   },
 });

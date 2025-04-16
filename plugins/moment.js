@@ -76,10 +76,10 @@ moment.updateLocale("uz-latn", {
 export default defineNuxtPlugin((nuxtApp) => {
   const { locale } = useNuxtApp().$i18n;
   switch (locale.value) {
-    case "uz":
+    case "o'z":
       moment.locale("uz-latn");
       break;
-    case "uz-cyril":
+    case "uz":
       moment.locale("uz");
       break;
     default:

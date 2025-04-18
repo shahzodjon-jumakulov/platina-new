@@ -88,7 +88,7 @@ const texts = computed(() => [
 </script>
 
 <template>
-  <AppFooterNav />
+  <AppFooterNav class="sticky bottom-0 md:hidden" />
 
   <footer class="bg-white dark:bg-white-100 max-md:hidden">
     <UContainer class="py-7">

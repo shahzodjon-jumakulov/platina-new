@@ -57,7 +57,7 @@ useSchemaOrg(schemaNodes);
         v-for="(item, index) in remaining"
         :key="item.id"
       >
-        <UDivider v-if="index !== 0" />
+        <UDivider v-if="index !== 0" class="md:hidden" />
         
         <NuxtLinkLocale to="/" class="group max-sm:mx-4">
           <article

@@ -24,7 +24,7 @@ useSchemaOrg(schemaNodes);
 <template>
   <div class="flex flex-col gap-4">
     <NuxtLinkLocale
-      to="/"
+      :to="useNewsUrl(pinned.publish, pinned.slug)"
       class="bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-2xl group"
     >
       <article class="flex max-md:flex-col-reverse max-md:gap-3">
@@ -47,6 +47,7 @@ useSchemaOrg(schemaNodes);
           :src="pinned.image_large"
           :alt="pinned.image_name"
           :title="pinned.title"
+          :video="pinned.youtube_link"
         />
       </article>
     </NuxtLinkLocale>
@@ -58,8 +59,11 @@ useSchemaOrg(schemaNodes);
         :key="item.id"
       >
         <UDivider v-if="index !== 0" class="md:hidden" />
-        
-        <NuxtLinkLocale to="/" class="group max-sm:mx-4">
+
+        <NuxtLinkLocale
+          :to="useNewsUrl(item.publish, item.slug)"
+          class="group max-sm:mx-4"
+        >
           <article
             class="flex justify-between items-start gap-3 md:flex-col-reverse"
           >
@@ -76,7 +80,7 @@ useSchemaOrg(schemaNodes);
               :src="item.image_medium"
               :alt="item.image_name"
               :title="item.title"
-              :video="item.youtube_link.length > 0"
+              :video="item.youtube_link"
               class="max-md:h-20 md:w-full !rounded-lg shrink-0"
             />
           </article>

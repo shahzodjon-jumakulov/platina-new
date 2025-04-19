@@ -35,7 +35,7 @@ defineProps({
       class="absolute inset-0 bg-white-200 opacity-0 group-hover:opacity-100 transition-opacity"
     ></div>
 
-    <div class="absolute bottom-3 right-3 z-[1]" v-if="video">
+    <div class="absolute bottom-3 right-3 z-[1]" v-if="video?.length > 0">
       <img src="~/assets/icons/video-icon.svg" alt="video" class="h-8" />
     </div>
   </div>

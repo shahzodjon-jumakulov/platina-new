@@ -29,7 +29,7 @@ useSchemaOrg(schemaNodes);
           class="grid grid-cols-1 md:max-lg:grid-cols-2 gap-4 md:max-lg:gap-x-0"
         >
           <NuxtLinkLocale
-            to="/"
+            :to="useNewsUrl(pinned.publish, pinned.slug)"
             class="max-md:bg-light-blue-100 max-md:dark:bg-light-blue-dark-100 max-md:rounded-2xl group md:max-lg:mr-2.5"
           >
             <article
@@ -57,6 +57,7 @@ useSchemaOrg(schemaNodes);
                 :src="pinned.image_large"
                 :alt="pinned.image_name"
                 :title="pinned.title"
+                :video="pinned.youtube_link"
               />
             </article>
           </NuxtLinkLocale>
@@ -69,7 +70,7 @@ useSchemaOrg(schemaNodes);
             <UDivider :class="{ 'max-lg:hidden': index === 0 }" />
 
             <NuxtLinkLocale
-              to="/"
+              :to="useNewsUrl(item.publish, item.slug)"
               class="group"
               :class="[
                 { 'md:max-lg:ml-2.5': index % 2 === 0 },
@@ -90,7 +91,7 @@ useSchemaOrg(schemaNodes);
                   :src="item.image_medium"
                   :alt="item.image_name"
                   :title="item.title"
-                  :video="item.youtube_link.length > 0"
+                  :video="item.youtube_link"
                   class="h-20 !rounded-lg shrink-0"
                 />
               </article>

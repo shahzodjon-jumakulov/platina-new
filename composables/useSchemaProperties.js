@@ -43,7 +43,6 @@ export default () => {
     return {
       "@type": "ItemList",
       name: name,
-      inLanguage: schemaLanguage.value,
       numberOfItems: 7,
       itemListElement: newsItems.map((article, index) => ({
         "@type": "ListItem",

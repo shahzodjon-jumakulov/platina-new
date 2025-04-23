@@ -17,9 +17,9 @@ defineProps({
   >
     <div class="flex items-center justify-between max-sm:px-4">
       <div class="flex items-center gap-2.5">
-        <IconHexagon class="h-3" />
+        <IconHexagon class="h-2.5 md:h-3" />
         <h2
-          class="text-xl font-bold text-blue dark:text-white-600 leading-[normal]"
+          class="text-lg md:text-xl font-bold text-blue dark:text-white-600 !leading-[normal]"
         >
           {{ title }}
         </h2>

@@ -39,10 +39,26 @@ defineProps({
 });
 
 const progress = ref(0);
+const active = ref(0);
+const bulletsRef = ref(null);
+
+const onActiveChange = (swiper) => {
+  active.value = swiper.activeIndex;
+  updatePassedBullets();
+};
 
 function onAutoplayTimeLeft(swiper, time, progressRatio) {
   progress.value = 1 - progressRatio;
 }
+
+const updatePassedBullets = () => {
+  if (!bulletsRef.value) return;
+
+  const bullets = Array.from(bulletsRef.value.children) || [];
+  bullets.forEach((bullet, index) => {
+    bullet.classList.toggle("is-passed", index < active.value);
+  });
+};
 </script>
 
 <template>
@@ -74,22 +90,30 @@ function onAutoplayTimeLeft(swiper, time, progressRatio) {
       </NuxtLinkLocale>
     </div>
 
-    <div class="flex flex-col gap-4 md:hidden">
+    <div
+      class="flex flex-col gap-4 md:hidden overflow-hidden sm:-mx-5"
+    >
       <div
-        class="flex gap-2 pagination"
+        ref="bulletsRef"
+        class="flex gap-2 pagination px-5"
         :style="{ '--progress': progress }"
       ></div>
 
-      <div class="-mx-5">
-        <Swiper v-bind="options" class="!px-5">
+      <div class="">
+        <Swiper
+          v-bind="options"
+          class="!px-4 sm:!px-5"
+          @autoplayTimeLeft="onAutoplayTimeLeft"
+          @activeIndexChange="onActiveChange"
+        >
           <SwiperSlide
             v-for="(item, index) in news.slice(0, 6)"
             :key="index"
-            @autoplayTimeLeft="onAutoplayTimeLeft"
+            class="!h-auto"
           >
             <NuxtLinkLocale
               :to="useNewsUrl(item.publish, item.slug)"
-              class="group"
+              class="group inline-flex h-full"
             >
               <article
                 class="flex flex-col gap-3 bg-light-blue-100 dark:bg-white-100 rounded-2xl"
@@ -135,9 +159,15 @@ function onAutoplayTimeLeft(swiper, time, progressRatio) {
   --swiper-pagination-bullet-border-radius: 1rem;
 
   &:deep(.swiper-pagination-bullet) {
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     flex-grow: 1;
     cursor: pointer;
+    background-color: #0066cc66;
+    overflow: hidden;
+  }
+
+  &:deep(.swiper-pagination-bullet.is-passed) {
+    background-color: #0066cc;
   }
 
   &:deep(.swiper-pagination-bullet-active) {
@@ -150,11 +180,12 @@ function onAutoplayTimeLeft(swiper, time, progressRatio) {
       top: 0;
       left: 0;
       height: 100%;
+      width: 100%;
       background-color: #0066cc;
       border-radius: 1rem;
       transform: scaleX(var(--progress));
       transform-origin: left;
-
+      will-change: transform;
     }
   }
 }

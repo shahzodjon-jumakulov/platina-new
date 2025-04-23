@@ -14,5 +14,4 @@ const { data } = await useMyFetch("/news/all/", {
 
 <template>
   <GroupCardSlider :news="news" :title="$t('article')" to="/" />
-  <!-- class="max-md:hidden" -->
 </template>

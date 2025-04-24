@@ -2,6 +2,18 @@
 import Hero from "~/components/Section/Main/Hero.vue";
 import Articles from "~/components/Section/Main/Articles.vue";
 import Popular from "~/components/Section/Main/Popular.vue";
+
+const news = ref([]);
+const { data } = await useMyFetch("/news/all/", {
+  params: { categories: "tahlil", limit: 4 },
+  server: false,
+  lazy: true,
+  onResponse({ response }) {
+    if (response._data?.results?.length) {
+      news.value = response._data.results;
+    }
+  },
+});
 </script>
 
 <template>
@@ -10,7 +22,10 @@ import Popular from "~/components/Section/Main/Popular.vue";
     <div class="flex flex-col gap-5 sm:py-5">
       <Hero />
       <Articles class="max-md:hidden" />
+      <GroupCardSlider :title="news[0]?.category.name" to="/" :news="news" color="light" />
       <Popular />
+
+      <GroupBusiness />
     </div>
   </UContainer>
 </template>

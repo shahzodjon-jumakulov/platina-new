@@ -4,30 +4,15 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const props = defineProps({
-  news: {
-    type: Array,
-    default: [],
-  },
-  suffix: {
-    type: String,
-    default: "",
-  },
-  color: {
-    type: String,
-    default: "",
-  },
-  short: {
-    type: Boolean,
-    default: true,
-  },
-  title: {
-    type: String,
-    default: "",
-  },
-  to: {
-    type: String,
-    required: false,
+const news = ref([]);
+await useMyFetch("/news/business/", {
+  params: { limit: 4 },
+  server: false,
+  lazy: true,
+  onResponse({ response }) {
+    if (response._data?.results?.length) {
+      news.value = response._data.results;
+    }
   },
 });
 
@@ -42,7 +27,7 @@ const options = {
   resistanceRatio: 0,
   modules: [Pagination, Autoplay],
   pagination: {
-    el: `.pagination-${props.suffix}`,
+    el: ".pagination-business",
     clickable: true,
   },
   autoplay: {
@@ -74,51 +59,43 @@ const updatePassedBullets = () => {
 </script>
 
 <template>
-  <BaseCard :to="to" :title="title" v-if="news.length">
-    <div
-      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 max-sm:px-4 max-md:hidden"
-    >
+  <section
+    v-if="news.length"
+    class="py-5 sm:px-5 bg-blue md:bg-white md:dark:bg-white-100 rounded-2xl grid grid-cols-1 gap-4"
+  >
+    <div class="flex items-center justify-between max-sm:px-4">
+      <div class="flex items-center gap-2.5">
+        <IconHexagon dark class="h-2.5 md:h-3" />
+        <h2
+          class="text-lg md:text-xl font-bold text-white md:text-blue dark:text-white-600 !leading-[normal]"
+        >
+          {{ $t("business") }}
+        </h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 lg:grid-cols-4 gap-5 max-md:hidden">
       <NuxtLinkLocale
+        :to="useNewsUrl(item.publish, item.slug)"
         v-for="item in news"
         :key="item.id"
-        :to="useNewsUrl(item.publish, item.slug)"
-        :class="[
-          'group',
-          { 'max-lg:[&:nth-child(n+7)]:hidden': news.length >= 8 },
-          { 'max-lg:[&:nth-child(n+4)]:hidden': news.length === 4 },
-          {
-            'bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-2xl':
-              color === 'light',
-          },
-        ]"
+        class="group bg-blue rounded-xl max-lg:[&:nth-child(n+4)]:hidden"
       >
-        <article class="flex flex-col gap-3">
+        <article class="flex flex-col">
           <BaseOverlayImg
-            class="!rounded-xl"
-            :src="item.image_large || item.image_medium"
-            :alt="item.image_name"
+            class="md:rounded-xl"
+            :src="item.image_large"
+            :alt="item.title"
             :title="item.title"
-            :video="item.youtube_link"
           />
-          <div
-            class="flex flex-col gap-1.5"
-            :class="{ 'p-4 pt-0': color }"
-          >
-            <BaseMeta
-              :category="item.category.name"
-              :date="item.publish"
-            />
+
+          <div class="p-4">
             <h3
-              class="title text-lg md:text-base !leading-std line-clamp-3"
+              class="text-base text-white dark:text-white-600 group-hover:text-light-blue-dark font-medium line-clamp-3"
               v-hover-transition
             >
               {{ item.title }}
             </h3>
-            <div
-              v-if="short"
-              class="short-content text-sm line-clamp-2"
-              v-html="item.short_content"
-            ></div>
           </div>
         </article>
       </NuxtLinkLocale>
@@ -127,7 +104,7 @@ const updatePassedBullets = () => {
     <div class="flex flex-col gap-4 md:hidden overflow-hidden sm:-mx-5">
       <div
         ref="bulletsRef"
-        :class="`flex gap-2 pagination pagination-${suffix} px-5`"
+        :class="`flex gap-2 pagination pagination-business px-5`"
         :style="{ '--progress': progress }"
       ></div>
 
@@ -138,52 +115,38 @@ const updatePassedBullets = () => {
           @autoplayTimeLeft="onAutoplayTimeLeft"
           @activeIndexChange="onActiveChange"
         >
-          <SwiperSlide
-            v-for="(item, index) in news.slice(0, 6)"
-            :key="index"
-            class="!h-auto"
-          >
+          <SwiperSlide v-for="item in news" :key="item.id" class="!h-auto">
             <NuxtLinkLocale
               :to="useNewsUrl(item.publish, item.slug)"
               class="group inline-flex h-full"
             >
-              <article
-                class="flex flex-col gap-3 bg-light-blue-100 dark:bg-white-100 rounded-2xl"
-              >
+              <article class="flex flex-col gap-3">
                 <BaseOverlayImg
-                  class="rounded-lg"
-                  :src="item.image_large || item.image_medium"
+                  :src="item.image_large"
                   :alt="item.image_name"
                   :title="item.title"
                   :video="item.youtube_link"
                 />
-                <div class="flex flex-col gap-2 p-4 pt-0">
-                  <BaseMeta
-                    :category="item.category.name"
-                    :date="item.publish"
-                  />
-                  <h3 class="title line-clamp-3 text-lg" v-hover-transition>
-                    {{ item.title }}
-                  </h3>
-                  <div
-                    v-if="short"
-                    class="short-content text-sm line-clamp-2"
-                    v-html="item.short_content"
-                  ></div>
-                </div>
+
+                <h3
+                  class="text-white group-hover:text-light-blue-dark line-clamp-3 text-lg"
+                  v-hover-transition
+                >
+                  {{ item.title }}
+                </h3>
               </article>
             </NuxtLinkLocale>
           </SwiperSlide>
         </Swiper>
       </div>
     </div>
-  </BaseCard>
+  </section>
 </template>
 
 <style scoped lang="scss">
 .pagination {
-  --swiper-pagination-color: #0066cc66;
-  --swiper-pagination-bullet-inactive-color: #0066cc66;
+  --swiper-pagination-color: #FFFFFF66;
+  --swiper-pagination-bullet-inactive-color: #FFFFFF66;
   --swiper-pagination-bullet-inactive-opacity: 1;
   --swiper-pagination-bullet-opacity: 1;
   --swiper-pagination-bullet-horizontal-gap: 0;
@@ -195,12 +158,12 @@ const updatePassedBullets = () => {
     transition: transform 0.3s ease-in-out;
     flex-grow: 1;
     cursor: pointer;
-    background-color: #0066cc66;
+    background-color: #FFFFFF66;
     overflow: hidden;
   }
 
   &:deep(.swiper-pagination-bullet.is-passed) {
-    background-color: #0066cc;
+    background-color: #ffffff;
   }
 
   &:deep(.swiper-pagination-bullet-active) {
@@ -214,7 +177,7 @@ const updatePassedBullets = () => {
       left: 0;
       height: 100%;
       width: 100%;
-      background-color: #0066cc;
+      background-color: #ffffff;
       border-radius: 1rem;
       transform: scaleX(var(--progress));
       transform-origin: left;

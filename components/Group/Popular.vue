@@ -1,7 +1,7 @@
 <script setup>
 const news = ref([]);
 const { data } = await useMyFetch("/news/popular/", {
-  params: { categories: "maqola", limit: 8 },
+  params: { limit: 8 },
   server: false,
   lazy: true,
   onResponse({ response }) {
@@ -15,7 +15,10 @@ const { data } = await useMyFetch("/news/popular/", {
 <template>
   <BaseCard to="/" :title="$t('popular')" v-if="news.length">
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5">
-      <NuxtLinkLocale to="/" class="group">
+      <NuxtLinkLocale
+        :to="useNewsUrl(news[0].publish, news[0].slug)"
+        class="group"
+      >
         <article
           class="max-md:bg-light-blue-100 max-md:dark:bg-light-blue-dark-100 rounded-2xl flex flex-col gap-3"
         >
@@ -46,13 +49,13 @@ const { data } = await useMyFetch("/news/popular/", {
       </NuxtLinkLocale>
 
       <div
-        class="max-sm:px-4 flex flex-col gap-4 md:max-lg::[&:nth-child(n+7)]:hidden lg:[&:nth-child(n+9)]:hidden"
+        class="max-sm:px-4 flex flex-col gap-4 max-lg:[&:nth-child(n+7)]:hidden lg:[&:nth-child(n+9)]:hidden"
         v-for="(item, index) in news.slice(1)"
         :key="item.id"
       >
         <UDivider v-if="index !== 0" class="md:hidden" />
 
-        <NuxtLinkLocale to="/" class="group">
+        <NuxtLinkLocale :to="useNewsUrl(item.publish, item.slug)" class="group">
           <article
             class="flex justify-between items-start md:flex-col-reverse gap-3"
           >

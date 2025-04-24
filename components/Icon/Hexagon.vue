@@ -1,3 +1,12 @@
+<script setup>
+defineProps({
+  dark: {
+    type: Boolean,
+    default: false,
+  },
+});
+</script>
+
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +17,8 @@
   >
     <path
       d="M4.71794 0.31735C5.064 0.120576 5.48811 0.120576 5.83418 0.317351L9.9811 2.67532C10.3341 2.87603 10.5521 3.25081 10.5521 3.65687V8.34313C10.5521 8.74919 10.3341 9.12397 9.9811 9.32469L5.83418 11.6826C5.48811 11.8794 5.064 11.8794 4.71794 11.6826L0.571018 9.32469C0.218032 9.12397 0 8.74919 0 8.34313V3.65687C0 3.25081 0.218032 2.87603 0.571019 2.67532L4.71794 0.31735Z"
-      class="fill-light-blue-400 dark:fill-light-blue-dark-400"
+      :class="dark ? 'fill-light-blue-dark-400' : 'fill-light-blue-400'"
+      class="dark:fill-light-blue-dark-400"
     />
   </svg>
 </template>

@@ -82,6 +82,7 @@ const updatePassedBullets = () => {
         v-for="item in news"
         :key="item.id"
         :to="useNewsUrl(item.publish, item.slug)"
+        @click="storeSelected(item)"
         :class="[
           'group',
           { 'max-lg:[&:nth-child(n+7)]:hidden': news.length >= 8 },
@@ -96,9 +97,7 @@ const updatePassedBullets = () => {
           <BaseOverlayImg
             class="!rounded-xl"
             :src="item.image_large || item.image_medium"
-            :alt="item.image_name"
-            :title="item.title"
-            :video="item.youtube_link"
+            :data="item"
           />
           <div
             class="flex flex-col gap-1.5"
@@ -145,6 +144,7 @@ const updatePassedBullets = () => {
           >
             <NuxtLinkLocale
               :to="useNewsUrl(item.publish, item.slug)"
+              @click="storeSelected(item)"
               class="group inline-flex h-full"
             >
               <article
@@ -153,9 +153,7 @@ const updatePassedBullets = () => {
                 <BaseOverlayImg
                   class="rounded-lg"
                   :src="item.image_large || item.image_medium"
-                  :alt="item.image_name"
-                  :title="item.title"
-                  :video="item.youtube_link"
+                  :data="item"
                 />
                 <div class="flex flex-col gap-2 p-4 pt-0">
                   <BaseMeta

@@ -1,8 +1,11 @@
 <script setup>
 const route = useRoute();
 const { slug } = route.params;
+const selectedNews = useSelectedNews();
 
-const { data } = await useMyFetch(`/news/${slug}`);
+const { data } = await useMyFetch(`/news/${slug}`, {
+  default: () => selectedNews.value || {},
+});
 
 const { generateNewsArticle } = useSchemaProperties();
 const schemaNodes = generateNewsArticle(data.value);

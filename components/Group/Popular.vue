@@ -17,6 +17,7 @@ const { data } = await useMyFetch("/news/popular/", {
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5">
       <NuxtLinkLocale
         :to="useNewsUrl(news[0].publish, news[0].slug)"
+        @click="storeSelected(news[0])"
         class="group"
       >
         <article
@@ -24,9 +25,7 @@ const { data } = await useMyFetch("/news/popular/", {
         >
           <BaseOverlayImg
             :src="news[0].image_small"
-            :alt="news[0].image_name"
-            :title="news[0].title"
-            :video="news[0].youtube_link"
+            :data="news[0]"
           />
 
           <div class="flex flex-col gap-2 md:gap-1.5 max-md:p-4 pt-0">
@@ -55,7 +54,11 @@ const { data } = await useMyFetch("/news/popular/", {
       >
         <UDivider v-if="index !== 0" class="md:hidden" />
 
-        <NuxtLinkLocale :to="useNewsUrl(item.publish, item.slug)" class="group">
+        <NuxtLinkLocale
+          :to="useNewsUrl(item.publish, item.slug)"
+          @click="storeSelected(item)"
+          class="group"
+        >
           <article
             class="flex justify-between items-start md:flex-col-reverse gap-3"
           >
@@ -72,9 +75,7 @@ const { data } = await useMyFetch("/news/popular/", {
             <BaseOverlayImg
               class="max-md:h-20 shrink-0 !rounded-lg"
               :src="item.image_small"
-              :alt="item.image_name"
-              :title="item.title"
-              :video="item.youtube_link"
+              :data="item"
             />
           </article>
         </NuxtLinkLocale>

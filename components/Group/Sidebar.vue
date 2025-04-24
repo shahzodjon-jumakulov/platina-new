@@ -30,6 +30,7 @@ useSchemaOrg(schemaNodes);
         >
           <NuxtLinkLocale
             :to="useNewsUrl(pinned.publish, pinned.slug)"
+            @click="storeSelected(pinned)"
             class="max-md:bg-light-blue-100 max-md:dark:bg-light-blue-dark-100 max-md:rounded-2xl group md:max-lg:mr-2.5"
           >
             <article
@@ -55,9 +56,7 @@ useSchemaOrg(schemaNodes);
               <BaseOverlayImg
                 class="md:h-20 shrink-0 rounded-lg"
                 :src="pinned.image_large"
-                :alt="pinned.image_name"
-                :title="pinned.title"
-                :video="pinned.youtube_link"
+                :data="pinned"
               />
             </article>
           </NuxtLinkLocale>
@@ -71,6 +70,7 @@ useSchemaOrg(schemaNodes);
 
             <NuxtLinkLocale
               :to="useNewsUrl(item.publish, item.slug)"
+              @click="storeSelected(item)"
               class="group"
               :class="[
                 { 'md:max-lg:ml-2.5': index % 2 === 0 },
@@ -89,9 +89,7 @@ useSchemaOrg(schemaNodes);
                 </div>
                 <BaseOverlayImg
                   :src="item.image_medium"
-                  :alt="item.image_name"
-                  :title="item.title"
-                  :video="item.youtube_link"
+                  :data="item"
                   class="h-20 !rounded-lg shrink-0"
                 />
               </article>

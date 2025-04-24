@@ -77,6 +77,7 @@ const updatePassedBullets = () => {
     <div class="grid grid-cols-3 lg:grid-cols-4 gap-5 max-md:hidden">
       <NuxtLinkLocale
         :to="useNewsUrl(item.publish, item.slug)"
+        @click="storeSelected(item)"
         v-for="item in news"
         :key="item.id"
         class="group bg-blue rounded-xl max-lg:[&:nth-child(n+4)]:hidden"
@@ -85,8 +86,7 @@ const updatePassedBullets = () => {
           <BaseOverlayImg
             class="md:rounded-xl"
             :src="item.image_large"
-            :alt="item.title"
-            :title="item.title"
+            :data="item"
           />
 
           <div class="p-4">
@@ -118,14 +118,13 @@ const updatePassedBullets = () => {
           <SwiperSlide v-for="item in news" :key="item.id" class="!h-auto">
             <NuxtLinkLocale
               :to="useNewsUrl(item.publish, item.slug)"
+              @click="storeSelected(item)"
               class="group inline-flex h-full"
             >
               <article class="flex flex-col gap-3">
                 <BaseOverlayImg
                   :src="item.image_large"
-                  :alt="item.image_name"
-                  :title="item.title"
-                  :video="item.youtube_link"
+                  :data="item"
                 />
 
                 <h3

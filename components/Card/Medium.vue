@@ -12,8 +12,7 @@ defineProps({
     <article class="flex flex-col gap-2.5">
       <BaseOverlayImg
         :src="article.image_small"
-        :alt="article.image_name"
-        :title="article.title"
+        :data="article"
         class="shrink-0 !rounded-lg"
       />
       <div class="flex flex-col gap-1.5">

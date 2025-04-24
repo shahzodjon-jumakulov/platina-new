@@ -16,8 +16,7 @@ defineProps({
       </div>
       <BaseOverlayImg
         :src="article.image_small"
-        :alt="article.image_name"
-        :title="article.title"
+        :data="article"
         class="h-20 shrink-0 !rounded-lg"
       />
     </article>

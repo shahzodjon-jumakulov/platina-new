@@ -17,15 +17,14 @@ const { data } = await useMyFetch("/news/all/", {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <NuxtLinkLocale
         :to="useNewsUrl(news[0].publish, news[0].slug)"
+        @click="storeSelected(news[0])"
         class="group row-span-4 bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-2xl"
       >
         <article class="flex flex-col">
           <BaseOverlayImg
             :src="news[0].image_large"
-            :alt="news[0].iamge_name"
+            :data="news[0]"
             class="!rounded-2xl"
-            :title="news[0].title"
-            :video="news[0].youtube_link"
           />
 
           <div class="p-4 md:p-5 flex flex-col gap-3">
@@ -54,14 +53,16 @@ const { data } = await useMyFetch("/news/all/", {
       >
         <UDivider v-if="index !== 0" />
 
-        <NuxtLinkLocale :to="useNewsUrl(item.publish, item.slug)" class="group">
+        <NuxtLinkLocale
+          :to="useNewsUrl(item.publish, item.slug)"
+          @click="storeSelected(item)"
+          class="group"
+        >
           <article class="flex max-md:flex-col gap-3 md:gap-4">
             <BaseOverlayImg
               class="rounded-lg md:h-[7.5rem] shrink-0"
               :src="item.image_medium"
-              :alt="item.iamge_name"
-              :title="item.title"
-              :video="item.youtube_link"
+              :data="item"
             />
             <div class="flex flex-col gap-2 md:gap-1.5">
               <BaseMeta :date="item.publish" :category="item.category.name" />

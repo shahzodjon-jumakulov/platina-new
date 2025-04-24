@@ -18,8 +18,8 @@ defineProps({
 <template>
   <section
     :class="[
-      transparent ? 'bg-transparent md:!p-0' : 'bg-white dark:bg-white-100',
-      'rounded-2xl grid grid-cols-1 gap-4 py-5 sm:px-5',
+      transparent ? 'bg-transparent md:!p-0 md:!bg-transparent' : '',
+      'rounded-2xl grid grid-cols-1 gap-4 py-5 sm:px-5 bg-white dark:bg-white-100',
     ]"
   >
     <div class="flex items-center justify-between max-sm:px-4">

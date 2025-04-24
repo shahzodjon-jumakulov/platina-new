@@ -10,3 +10,6 @@ export const storeSelected = (news) => {
   const selectedNews = useSelectedNews();
   selectedNews.value = news;
 };
+
+export const useCategories = () =>
+  useState(() => ({ categories: [], lang: "" }));

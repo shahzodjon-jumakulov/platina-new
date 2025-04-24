@@ -11,7 +11,7 @@
     >
       <GroupFeatured />
     </BaseCard>
-    <BaseCard class="sm:gap-5" :title="$t('latest')">
+    <BaseCard class="sm:gap-5 !flex flex-col" :title="$t('latest')">
       <GroupSidebar />
     </BaseCard>
   </div>

@@ -1,11 +1,50 @@
 <script setup>
-//
+const { locale } = useI18n();
+const categoriesState = useCategories();
+const categories = ref([]);
+
+const getCategories = async () => {
+  if (
+    categoriesState.value.lang === locale.value &&
+    categoriesState.value.categories.length
+  ) {
+    categories.value = categoriesState.value.categories;
+  } else {
+    const { data } = await useMyFetch("/categories/list", {
+      transform: (data) => data.results,
+    });
+    categoriesState.value = {
+      lang: locale.value,
+      categories: data.value,
+    };
+    categories.value = data.value;
+  }
+};
+
+getCategories();
+
+watch(
+  () => locale.value,
+  (newLocale) => {
+    if (categoriesState.value.lang !== newLocale) {
+      getCategories();
+    }
+  }
+);
 </script>
 
 <template>
   <div class="max-lg:hidden flex justify-between items-end">
-    <!-- categories -->
-    <div class=""></div>
+    <div class="flex items-center gap-8">
+      <NuxtLinkLocale
+        v-for="item in categories"
+        :key="item.id"
+        to="/"
+        class="py-4 text-sm font-semibold text-black"
+      >
+        {{ item.name }}
+      </NuxtLinkLocale>
+    </div>
 
     <NuxtLink
       to="https://t.me/platinauzb"

@@ -29,6 +29,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  transparentBg: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const options = {
@@ -74,7 +78,7 @@ const updatePassedBullets = () => {
 </script>
 
 <template>
-  <BaseCard :to="to" :title="title" v-if="news.length">
+  <BaseCard :to="to" :title="title" v-if="news.length" :transparent="transparentBg">
     <div
       class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 max-sm:px-4 max-md:hidden"
     >

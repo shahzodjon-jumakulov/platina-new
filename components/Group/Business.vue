@@ -4,6 +4,13 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
+defineProps({
+  transparentBg: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const news = ref([]);
 await useMyFetch("/news/business/", {
   params: { limit: 4 },
@@ -61,7 +68,8 @@ const updatePassedBullets = () => {
 <template>
   <section
     v-if="news.length"
-    class="py-5 sm:px-5 bg-blue md:bg-white md:dark:bg-white-100 rounded-2xl grid grid-cols-1 gap-4"
+    :class="transparentBg ? 'md:p-0' : 'md:bg-white md:dark:bg-white-100'"
+    class="max-md:bg-blue py-5 sm:px-5 rounded-2xl grid grid-cols-1 gap-4"
   >
     <div class="flex items-center justify-between max-sm:px-4">
       <div class="flex items-center gap-2.5">
@@ -122,10 +130,7 @@ const updatePassedBullets = () => {
               class="group inline-flex h-full"
             >
               <article class="flex flex-col gap-3">
-                <BaseOverlayImg
-                  :src="item.image_large"
-                  :data="item"
-                />
+                <BaseOverlayImg :src="item.image_large" :data="item" />
 
                 <h3
                   class="text-white group-hover:text-light-blue-dark line-clamp-3 text-lg"
@@ -144,8 +149,8 @@ const updatePassedBullets = () => {
 
 <style scoped lang="scss">
 .pagination {
-  --swiper-pagination-color: #FFFFFF66;
-  --swiper-pagination-bullet-inactive-color: #FFFFFF66;
+  --swiper-pagination-color: #ffffff66;
+  --swiper-pagination-bullet-inactive-color: #ffffff66;
   --swiper-pagination-bullet-inactive-opacity: 1;
   --swiper-pagination-bullet-opacity: 1;
   --swiper-pagination-bullet-horizontal-gap: 0;
@@ -157,7 +162,7 @@ const updatePassedBullets = () => {
     transition: transform 0.3s ease-in-out;
     flex-grow: 1;
     cursor: pointer;
-    background-color: #FFFFFF66;
+    background-color: #ffffff66;
     overflow: hidden;
   }
 

@@ -58,7 +58,7 @@ export default () => {
       "@type": "NewsArticle",
       "@id": useNewsUrl(article.publish, article.slug, locale.value),
       headline: article.title,
-      datePublished: article.publish,
+      datePublished: article.publish + "+05:00",
       publisher: schemaPublisher,
       image: article.image_large,
       description: htmlToText(article.short_content),

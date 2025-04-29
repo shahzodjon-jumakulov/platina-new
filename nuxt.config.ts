@@ -20,6 +20,16 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
+  schemaOrg: {
+    defaults: false,
+  },
+
+  app: {
+    head: {
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    },
+  },
+
   i18n: {
     vueI18n: "~/i18n.config.ts",
     locales: ["uz", "o'z"],

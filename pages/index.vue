@@ -15,6 +15,10 @@ const { data } = await useMyFetch("/news/all/", {
     }
   },
 });
+
+const { webpageSchema } = useSchemaProperties();
+
+useSchemaOrg(webpageSchema);
 </script>
 
 <template>

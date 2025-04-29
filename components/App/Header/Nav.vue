@@ -1,5 +1,8 @@
 <script setup>
 const { locale } = useI18n();
+const route = useRoute();
+const category = ref(route.params.category);
+
 const categoriesState = useCategories();
 const categories = ref([]);
 
@@ -21,7 +24,7 @@ const getCategories = async () => {
   }
 };
 
-getCategories();
+await getCategories();
 
 watch(
   () => locale.value,
@@ -31,19 +34,72 @@ watch(
     }
   }
 );
+
+// handling a line under selected category
+const getIndex = (slug) => {
+  const idx = categories.value?.findIndex((item) => item.slug === slug);
+  return categories.value[idx]?.id;
+};
+const activeIndex = ref(getIndex(category.value));
+
+const block = ref(null);
+
+const handleActive = () => {
+  const el = document.getElementById(`menu-item-${activeIndex.value}`);
+  if (!el || !activeIndex.value) {
+    block.value.style.width = 0;
+    // block.value.style.left = 0;
+  } else {
+    block.value.style.width = `${el.offsetWidth}px`;
+    block.value.style.left = `${el.offsetLeft}px`;
+  }
+};
+
+watch(
+  () => route.params.category,
+  (slug) => {
+    // if (newIndex === -1) return;
+    activeIndex.value = getIndex(slug);
+
+    handleActive();
+  }
+);
+
+onMounted(() => {
+  handleActive();
+  window.addEventListener("resize", handleActive);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleActive);
+});
 </script>
 
 <template>
   <div class="max-lg:hidden flex justify-between items-end">
-    <div class="flex items-center gap-8">
+    <div class="flex items-center gap-8 relative">
       <NuxtLinkLocale
         v-for="item in categories"
         :key="item.id"
-        to="/"
-        class="py-4 text-sm font-semibold text-black"
+        :to="`/category/${item.slug}`"
+        class="py-4 text-sm font-semibold group"
+        :id="`menu-item-${item.id}`"
+        v-hover-transition
       >
-        {{ item.name }}
+        <span
+          :class="
+            activeIndex === item.id
+              ? 'text-light-blue dark:text-light-blue-dark'
+              : 'text-black dark:text-white group-hover:text-light-blue dark:group-hover:text-light-blue-dark'
+          "
+        >
+          {{ item.name }}
+        </span>
       </NuxtLinkLocale>
+      <div
+        ref="block"
+        class="bg-light-blue dark:bg-light-blue-dark h-1 rounded-t-sm absolute bottom-0 transition-all"
+      ></div>
     </div>
 
     <NuxtLink
@@ -67,7 +123,7 @@ watch(
     rgba(0, 102, 204, 0.06);
   background-size: 200% 100%;
   background-position: right center;
-  transition: background-position 0.5s ease-in-out;
+  transition: background-position 0.3s ease-in-out;
   color: white;
   padding: 1rem 2rem;
   border: none;

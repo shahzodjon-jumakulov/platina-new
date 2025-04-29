@@ -38,7 +38,7 @@ useSchemaOrg(schemaNodes);
             {{ pinned.title }}
           </h3>
           <div
-            class="short-content text-sm md:text-base"
+            class="short-content text-sm md:text-base lg:line-clamp-5"
             v-html="pinned.short_content"
           ></div>
         </div>

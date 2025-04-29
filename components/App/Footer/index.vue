@@ -113,6 +113,7 @@ const texts = computed(() => [
               v-for="item in socials"
               :key="item.id"
               :to="item.link"
+              target="_blank"
               class="group"
             >
               <component

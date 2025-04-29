@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "uz.platina.mobile",
+            "sha256_cert_fingerprints": [
+                "A3:06:64:76:A7:55:34:57:EC:2F:57:A6:9C:08:F8:F6:9B:1A:63:DD:E2:C8:48:FE:C6:5A:DC:F9:76:AE:41:33"
+            ]
+        }
+    }
+]

@@ -1,5 +1,5 @@
 export default () => {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
 
   const schemaLanguage = computed(() => {
     const map = {
@@ -18,6 +18,40 @@ export default () => {
       url: "https://platina.uz/favicon.svg",
     },
   };
+
+  const websiteSchema = computed(() => ({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Platina.uz",
+    url: "https://platina.uz",
+    inLanguage: schemaLanguage.value,
+    publisher: {
+      "@type": "Organization",
+      name: "Platina.uz",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://platina.uz/favicon.svg",
+      },
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://platina.uz/search?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  }));
+
+  const webpageSchema = computed(() => ({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: "https://platina.uz",
+    name: t("meta.title"),
+    description: t("meta.desc"),
+    inLanguage: schemaLanguage.value,
+    isPartOf: {
+      "@type": "WebSite",
+      url: "https://platina.uz",
+    },
+  }));
 
   const generateNewsArticle = (article) => {
     return {
@@ -52,10 +86,58 @@ export default () => {
     };
   };
 
+  const generateBreadcrumbList = (category, article) => {
+    const localePath = useLocalePath();
+    const breadcrumbs = [
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@id": "https://platina.uz" + localePath("/"),
+          name: t("main_page"),
+        },
+      },
+    ];
+
+    if (category) {
+      breadcrumbs.push({
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@id":
+            "https://platina.uz" + localePath("/category/" + category.slug),
+          name: category.name,
+        },
+      });
+    }
+
+    if (article) {
+      breadcrumbs.push({
+        "@type": "ListItem",
+        position: 3,
+        item: {
+          "@id":
+            "https://platina.uz" +
+            localePath(useNewsUrl(article.publish, article.slug)),
+          name: article.title,
+        },
+      });
+    }
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbs,
+    };
+  };
+
   return {
     schemaLanguage,
     schemaPublisher,
+    websiteSchema,
+    webpageSchema,
     generateNewsArticle,
     generateItemList,
+    generateBreadcrumbList,
   };
 };

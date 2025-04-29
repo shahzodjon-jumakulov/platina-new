@@ -12,9 +12,9 @@
           <div class="flex items-center justify-between gap-5 grow max-md:py-3">
             <AppHeaderBurger class="lg:hidden" />
 
-            <NuxtLink to="/" class="inline-flex">
+            <NuxtLinkLocale to="/" class="inline-flex">
               <IconLogo class="max-md:h-8" />
-            </NuxtLink>
+            </NuxtLinkLocale>
 
             <AppHeaderSearch class="lg:grow" />
           </div>

@@ -95,7 +95,9 @@ const texts = computed(() => [
       <div class="flex flex-col gap-5">
         <div class="flex items-center justify-between gap-5 flex-wrap">
           <div class="flex items-center gap-10">
-            <IconLogo />
+            <NuxtLinkLocale to="/">
+              <IconLogo />
+            </NuxtLinkLocale>
             <div class="flex">
               <NuxtLinkLocale
                 class="px-5 py-3.5 rounded-lg text-black dark:text-white font-medium hover:bg-black-100 dark:hover:bg-white-100"

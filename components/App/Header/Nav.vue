@@ -3,49 +3,22 @@ const { locale } = useI18n();
 const route = useRoute();
 const category = ref(route.params.category);
 
-const categoriesState = useCategories();
-const categories = ref([]);
-
-const getCategories = async () => {
-  if (
-    categoriesState.value.lang === locale.value &&
-    categoriesState.value.categories.length
-  ) {
-    categories.value = categoriesState.value.categories;
-  } else {
-    const { data } = await useMyFetch("/categories/list", {
-      transform: (data) => data.results,
-    });
-    categoriesState.value = {
-      lang: locale.value,
-      categories: data.value,
-    };
-    categories.value = data.value;
-  }
-};
-
-await getCategories();
-
-watch(
-  () => locale.value,
-  (newLocale) => {
-    if (categoriesState.value.lang !== newLocale) {
-      getCategories();
-    }
-  }
-);
+const categoriesStore = useCategories();
+const categories = computed(() => categoriesStore.categories.value.categories);
 
 // handling a line under selected category
 const getIndex = (slug) => {
-  const idx = categories.value?.findIndex((item) => item.slug === slug);
+  if (!categories.value.length) return -1;
+  const idx = categories.value.findIndex((item) => item.slug === slug);
   return categories.value[idx]?.id;
 };
-const activeIndex = ref(getIndex(category.value));
+const activeIndex = ref(null);
 
 const block = ref(null);
 
 const handleActive = () => {
   const el = document.getElementById(`menu-item-${activeIndex.value}`);
+  console.log(activeIndex.value)
   if (!el || !activeIndex.value) {
     block.value.style.width = 0;
     // block.value.style.left = 0;
@@ -66,6 +39,7 @@ watch(
 );
 
 onMounted(() => {
+  activeIndex.value = getIndex(category.value);
   handleActive();
   window.addEventListener("resize", handleActive);
 });
@@ -98,7 +72,7 @@ onBeforeUnmount(() => {
       </NuxtLinkLocale>
       <div
         ref="block"
-        class="bg-light-blue dark:bg-light-blue-dark h-1 rounded-t-sm absolute bottom-0 transition-all"
+        class="bg-light-blue dark:bg-light-blue-dark h-1 rounded-t-sm absolute bottom-0 transition-all will-change-transform"
       ></div>
     </div>
 

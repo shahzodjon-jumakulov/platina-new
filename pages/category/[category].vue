@@ -1,6 +1,15 @@
 <script setup>
 const route = useRoute();
+const { locale } = useI18n();
 const category = ref(route.params.category);
+const categoryRef = ref(null);
+
+const categoriesState = useCategories();
+const categories = computed(() => categoriesState.categories.value.categories);
+const cat = ref({});
+watch(categories, (newVal) => {
+  cat.value = newVal.find((item) => item.slug === category.value);
+});
 
 const { data } = await useMyFetch("/news/all/", {
   params: { categories: category, limit: 16 },
@@ -37,6 +46,7 @@ const showMore = () => {
 
 onMounted(() => {
   loadMore();
+  categoryRef.value.style.backgroundImage = `url(${cat.value?.image})`;
 });
 
 const { generateBreadcrumbList } = useSchemaProperties();
@@ -45,21 +55,39 @@ useSchemaOrg(breadcrumbList);
 </script>
 
 <template>
-  <div class="h-[14rem] flex-center relative overflow-hidden bg-blue">
-    <div class="flex flex-col gap-5 items-center z-[1]">
-      <h1 class="text-5xl leading-std font-bold text-white">
-        {{ news[0]?.category.name }}
-      </h1>
-    </div>
-
+  <div class="h-[14rem] overflow-hidden bg-blue">
     <div
-      class="absolute-center size-[30rem] bg-light-blue blur-[9.4rem] z-[0]"
-    ></div>
+      class="flex-center h-full relative z-[1]"
+      ref="categoryRef"
+      :style="{ backgroundImage: `url(${cat?.image})` }"
+    >
+      <div class="flex flex-col gap-5 items-center z-[1]">
+        <div class="flex items-center gap-4">
+          <img :src="cat.icon" alt="" role="presentation" v-if="cat?.icon" />
+          <h1 class="text-5xl leading-std font-bold text-white">
+            {{ cat?.name }}
+          </h1>
+        </div>
+        <p class="max-w-md text-center" v-if="cat?.description">
+          {{ cat.description }}
+        </p>
+      </div>
+
+      <!-- <div
+        class="absolute inset-0 mix-blend-luminosity select-none"
+        v-if="cat?.image"
+      >
+        <img :src="cat.image" :alt="cat.name" class="object-cover size-full" />
+      </div> -->
+      <div
+        class="absolute-center size-[30rem] bg-light-blue blur-[9.4rem] z-[0]"
+      ></div>
+    </div>
   </div>
 
   <UContainer class="py-7 max-sm:px-4">
     <div class="flex flex-col gap-7">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         <NuxtLinkLocale
           v-for="item in news"
           :key="item.id"
@@ -91,7 +119,7 @@ useSchemaOrg(breadcrumbList);
           @click="showMore"
           :loading="loading"
         />
-      </div>
+      </section>
 
       <GroupBusiness transparent-bg />
     </div>

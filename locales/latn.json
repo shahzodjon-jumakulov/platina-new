@@ -4,7 +4,8 @@
   "pinned": "Muhim",
   "pinned_news": "Muhim yangiliklar",
   "latest": "So‘nggi yangiliklar",
-  "popular": "Ommabop yangiliklar",
+  "popular": "Ommabop",
+  "popular_news": "Ommabop yangiliklar",
   "latest_short": "So‘nggi",
   "popular_short": "Ommabop",
   "more_news": "Ko‘proq yangiliklar",
@@ -26,6 +27,10 @@
   "dark_mode": "Tungi rejim",
   "download_app": "Ilovamizni yuklab olish",
   "main_page": "Asosiy sahifa",
+  "reklama": {
+    "phone": "Reklama va tijoriy hamkorlik masalasida quyidagi raqamga murojaat qiling.",
+    "telegram": "Reklama bilan bog‘liq savollarni Telegram manziliga yuborishingiz mumkin."
+  },
   "error": {
     "title": "Bunday sahifa mavjud emas :(",
     "back": "Asosiy sahifaga o‘ting",

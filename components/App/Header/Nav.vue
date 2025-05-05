@@ -18,7 +18,6 @@ const block = ref(null);
 
 const handleActive = () => {
   const el = document.getElementById(`menu-item-${activeIndex.value}`);
-  console.log(activeIndex.value)
   if (!el || !activeIndex.value) {
     block.value.style.width = 0;
     // block.value.style.left = 0;

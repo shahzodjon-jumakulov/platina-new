@@ -18,7 +18,6 @@ export default function () {
       const { data, error: fetchError } = await useMyFetch("/categories/list", {
         transform: (data) => data.results,
       });
-      console.log("categories", data.value);
       if (fetchError.value) throw fetchError.value;
       categories.value.categories = data.value || [];
       categories.value.lang = locale.value;
@@ -30,7 +29,6 @@ export default function () {
   };
 
   watch(locale, async () => {
-    console.log("locale changed", locale.value);
     await load();
   });
 

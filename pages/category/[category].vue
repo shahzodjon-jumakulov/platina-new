@@ -55,15 +55,21 @@ useSchemaOrg(breadcrumbList);
 </script>
 
 <template>
-  <div class="h-[14rem] overflow-hidden bg-blue">
+  <div class="h-[10rem] md:h-[14rem] overflow-hidden">
     <div
-      class="flex-center h-full relative z-[1]"
+      class="flex-center h-full relative z-[1] max-sm:px-4 bg-cover bg-blend-luminosity bg-blue"
       ref="categoryRef"
       :style="{ backgroundImage: `url(${cat?.image})` }"
     >
       <div class="flex flex-col gap-5 items-center z-[1]">
         <div class="flex items-center gap-4">
-          <img :src="cat.icon" alt="" role="presentation" v-if="cat?.icon" />
+          <img
+            v-if="cat?.icon"
+            :src="cat.icon"
+            alt=""
+            role="presentation"
+            class="select-none"
+          />
           <h1 class="text-5xl leading-std font-bold text-white">
             {{ cat?.name }}
           </h1>
@@ -73,14 +79,8 @@ useSchemaOrg(breadcrumbList);
         </p>
       </div>
 
-      <!-- <div
-        class="absolute inset-0 mix-blend-luminosity select-none"
-        v-if="cat?.image"
-      >
-        <img :src="cat.image" :alt="cat.name" class="object-cover size-full" />
-      </div> -->
       <div
-        class="absolute-center size-[30rem] bg-light-blue blur-[9.4rem] z-[0]"
+        class="absolute-center size-[30rem] bg-light-blue blur-[9.4rem] z-[0] max-md:opacity-50"
       ></div>
     </div>
   </div>

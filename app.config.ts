@@ -5,6 +5,29 @@ export default defineAppConfig({
       padding: "px-0 md:px-5 lg:px-8",
       constrained: "max-w-[30rem] md:max-w-3xl lg:max-w-7xl mx-auto",
     },
+    input: {
+      rounded: "rounded-lg",
+      size: {
+        sm: "text-sm",
+      },
+      padding: {
+        sm: "px-5 py-3",
+      },
+      trailing: {
+        padding: { sm: "pe-16" },
+      },
+      color: {
+        white: {
+          outline:
+            "bg-blue-100 dark:bg-white-100 text-black-500 dark:text-white-500 ring-0 focus:ring-0 focus:bg-white",
+        },
+      },
+      icon: {
+        trailing: {
+          padding: { sm: "px-5" },
+        },
+      },
+    },
     button: {
       base: "transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current",
       size: {

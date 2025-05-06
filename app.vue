@@ -1,3 +1,11 @@
+<template>
+  <div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
+</template>
+
 <script setup>
 const { t, locale } = useI18n();
 const colorMode = useColorMode();
@@ -84,11 +92,3 @@ const { websiteSchema } = useSchemaProperties();
 
 useSchemaOrg(websiteSchema);
 </script>
-
-<template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
-</template>

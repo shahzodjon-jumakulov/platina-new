@@ -92,7 +92,7 @@ const updatePassedBullets = () => {
       >
         <article class="flex flex-col">
           <BaseOverlayImg
-            class="md:rounded-xl"
+            class="md:rounded-b-xl"
             :src="item.image_large"
             :data="item"
           />

@@ -9,10 +9,11 @@ defineProps({
 
 <template>
   <button
-    class="rounded-lg p-2 bg-light-blue-100 hover:bg-light-blue-200 dark:bg-white-100 dark:hover:bg-white-200 disabled:!bg-transparent border border-transparent disabled:border-light-blue-100 disabled:dark:border-white-100 group"
+    class="rounded-lg p-1.5 md:p-2 bg-light-blue-100 hover:bg-light-blue-200 dark:bg-white-100 dark:hover:bg-white-200 disabled:!bg-transparent border border-transparent disabled:border-light-blue-100 disabled:dark:border-white-100 group"
     :class="[{ 'rotate-180': right }]"
   >
     <svg
+      class="max-md:size-4"
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"

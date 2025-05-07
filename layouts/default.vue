@@ -6,6 +6,8 @@
   <div class="min-h-[100svh] flex flex-col">
     <AppHeader />
 
+    <GroupVideoModal />
+
     <main class="grow">
       <slot />
     </main>

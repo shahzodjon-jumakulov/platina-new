@@ -1,5 +1,6 @@
 <template>
   <svg
+    class="w-fit"
     width="183"
     height="40"
     viewBox="0 0 183 40"

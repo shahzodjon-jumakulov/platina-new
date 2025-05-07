@@ -8,11 +8,13 @@ const options = {
   slidesPerView: 2.5,
   spaceBetween: 16,
   breakpoints: {
-    480: {
-      slidesPerView: 4,
-    },
     768: {
+      slidesPerView: 4,
+      spaceBetween: 20,
+    },
+    1280: {
       slidesPerView: 5,
+      spaceBetween: 22,
     },
   },
   resistanceRatio: 0,
@@ -32,27 +34,54 @@ const options = {
 
 const { data } = await useMyFetch("/news/video/shorts/", {
   params: { limit: 10 },
+  server: false,
+  lazy: true,
   transform: (data) => data.results,
 });
-console.log(data.value);
+
+const thumbnail = (link) => {
+  return `https://i.ytimg.com/vi/${getYtId(link, true)}/oardefault.jpg`;
+};
+const shortsUrl = useShorts();
+const handleShorts = (link) => {
+  shortsUrl.value.url = link;
+  shortsUrl.value.open = true;
+};
 </script>
 
 <template>
   <section
-    class="bg-white dark:bg-white-200 rounded-2xl p-5 flex flex-col gap-4"
+    v-if="data?.length"
+    class="bg-white dark:bg-white-200 rounded-2xl p-4 md:p-5 flex flex-col gap-4"
   >
     <div class="flex justify-between items-center">
-      <IconPlatinatv />
+      <IconPlatinatv class="max-md:h-8" />
       <div class="flex gap-2">
         <IconTvArrow class="swiper-tv-prev" />
         <IconTvArrow right class="swiper-tv-next" />
       </div>
     </div>
 
-    <div class="space-y-5 -mx-5">
-      <Swiper v-bind="options" class="!px-5">
+    <div class="space-y-5 -mx-4 sm:-mx-5">
+      <Swiper v-bind="options" class="!px-4 md:!px-5">
         <SwiperSlide v-for="item in data" :key="item.id" class="!h-auto">
-          <h1>{{ item.name }}</h1>
+          <button
+            @click="handleShorts(item.link)"
+            class="relative w-full aspect-[9/16] group cursor-pointer rounded-lg overflow-hidden select-none"
+          >
+            <img :src="thumbnail(item.link)" :alt="item.name" class="w-full" />
+
+            <div
+              class="absolute inset-0 bg-white-200 opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+            <div class="absolute bottom-3 right-3 z-[1]">
+              <img
+                src="~/assets/icons/video-icon.svg"
+                alt="video"
+                class="h-8"
+              />
+            </div>
+          </button>
         </SwiperSlide>
       </Swiper>
     </div>

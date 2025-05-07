@@ -1,7 +1,7 @@
 <script setup>
 const route = useRoute();
 const { q, popular } = route.query;
-const term = q ? decodeURIComponent(q) : null;
+const term = ref(q ? decodeURIComponent(q) : null);
 const activeTab = ref(popular ? 1 : 0);
 const tabs = [
   {
@@ -22,10 +22,6 @@ watch(activeTab, (val) => {
     navigateTo({ query: queries });
   }
 });
-watch(
-  () => route.query,
-  (newVal) => initNews(newVal.popular)
-);
 
 const { data } = await useMyFetch("/news/all", {
   params: {
@@ -41,20 +37,26 @@ const loading = ref(false);
 const tempNews = ref([]);
 const tempNext = ref(null);
 
-async function initNews(isPopular = false) {
+const initNews = async (isPopular = false) => {
+  const query = route.query.q;
   loading.value = true;
   const { data: newData } = await useMyFetch("/news/all", {
     params: {
-      search: q,
+      search: query,
       limit: 12,
       ordering: isPopular ? "-number_of_views" : "",
     },
   });
+  term.value = query ? decodeURIComponent(query) : null;
   count.value = newData.value?.count || 0;
   next.value = newData.value?.next || null;
   news.value = newData.value?.results || [];
   loading.value = false;
-}
+};
+watch(
+  () => route.query,
+  (newVal) => initNews(newVal.popular)
+);
 
 const loadMore = async () => {
   if (next.value) {

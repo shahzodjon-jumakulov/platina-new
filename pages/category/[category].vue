@@ -1,6 +1,6 @@
 <script setup>
 const route = useRoute();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const category = ref(route.params.category);
 const categoryRef = ref(null);
 
@@ -9,17 +9,45 @@ const categories = computed(() => categoriesState.categories.value.categories);
 const cat = ref({});
 watch(categories, (newVal) => {
   cat.value = newVal.find((item) => item.slug === category.value);
+  if (cat.value) {
+    const title = `${cat.value.name} ${t("meta.category_news")} | Platina.uz`;
+    const description = cat.value.description;
+    useSeoMeta({
+      title: title,
+      description: description,
+      ogTitle: title,
+      ogDescription: description,
+      twitterTitle: title,
+      twitterDescription: description,
+      ogImage: cat.value.image,
+      twitterImage: cat.value.image,
+    });
+  }
 });
 
-const { data } = await useMyFetch("/news/all/", {
-  params: { categories: category, limit: 16 },
+useSeoMeta({
+  ogUrl: "https://platina.uz/category/" + category.value,
 });
 
-const news = ref(data.value.results);
-const next = ref(data.value.next);
+const news = ref([]);
+const next = ref(null);
 const loading = ref(false);
 const tempNews = ref([]);
 const tempNext = ref(null);
+
+if (category.value === "platina-tv") {
+  const { data } = await useMyFetch("/news/video/shorts/", {
+    params: { limit: 15 },
+  });
+  news.value = data.value.results;
+  next.value = data.value.next;
+} else {
+  const { data } = await useMyFetch("/news/all/", {
+    params: { categories: category, limit: 16 },
+  });
+  news.value = data.value.results;
+  next.value = data.value.next;
+}
 
 const loadMore = async () => {
   if (next.value) {
@@ -68,7 +96,7 @@ useSchemaOrg(breadcrumbList);
             :src="cat.icon"
             alt=""
             role="presentation"
-            class="select-none"
+            class="select-none w-[3.188rem]"
           />
           <h1 class="text-5xl leading-std font-bold text-white">
             {{ cat?.name }}
@@ -87,27 +115,39 @@ useSchemaOrg(breadcrumbList);
 
   <UContainer class="py-7 max-sm:px-4">
     <div class="flex flex-col gap-7">
-      <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        <NuxtLinkLocale
-          v-for="item in news"
-          :key="item.id"
-          :to="useNewsUrl(item.publish, item.slug)"
-          class="group bg-white dark:bg-white-100 rounded-xl overflow-hidden"
+      <section class="grid grid-cols-1 gap-5">
+        <div
+          v-if="category === 'platina-tv'"
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"
         >
-          <article class="flex flex-col">
-            <BaseOverlayImg
-              :src="item.image_large"
-              :data="item"
-              class="!rounded-none"
-            />
-            <div class="p-4 flex flex-col gap-1.5">
-              <BaseMeta :category="item.category.name" :date="item.publish" />
-              <h3 class="title line-clamp-3 text-base" v-hover-transition>
-                {{ item.title }}
-              </h3>
-            </div>
-          </article>
-        </NuxtLinkLocale>
+          <CardShorts v-for="item in news" :key="item" :video="item" />
+        </div>
+
+        <div
+          v-else
+          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+        >
+          <NuxtLinkLocale
+            v-for="item in news"
+            :key="item.id"
+            :to="useNewsUrl(item.publish, item.slug)"
+            class="group bg-white dark:bg-white-100 rounded-xl overflow-hidden"
+          >
+            <article class="flex flex-col">
+              <BaseOverlayImg
+                :src="item.image_large"
+                :data="item"
+                class="!rounded-none"
+              />
+              <div class="p-4 flex flex-col gap-1.5">
+                <BaseMeta :category="item.category.name" :date="item.publish" />
+                <h3 class="title line-clamp-3 text-base" v-hover-transition>
+                  {{ item.title }}
+                </h3>
+              </div>
+            </article>
+          </NuxtLinkLocale>
+        </div>
 
         <UButton
           v-if="next"

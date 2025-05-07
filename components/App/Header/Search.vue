@@ -67,17 +67,20 @@ watch(searchTerm, () => {
 // <-- Options start -->
 const popular = ref([]);
 const filteredOptions = ref([]);
+const loading = ref(true);
 const debounceTimeout = ref(null);
 watch(searchTerm, async () => {
   if (searchTerm.value?.length < 3) {
     filteredOptions.value = popular.value || [];
   } else {
+    loading.value = true;
     clearTimeout(debounceTimeout.value);
     debounceTimeout.value = setTimeout(async () => {
       const { data } = await useMyFetch("/news/all", {
         params: { search: searchTerm.value, limit: 6 },
       });
       filteredOptions.value = data.value.results;
+      loading.value = false;
     }, 300);
   }
 });
@@ -89,6 +92,7 @@ await useMyFetch("/news/popular/", {
     if (response._data?.results?.length) {
       popular.value = response._data.results;
       filteredOptions.value = popular.value;
+      loading.value = false;
     }
   },
 });
@@ -168,12 +172,18 @@ const selectText = (event) => {
           @keydown="handleKeyDown"
           @focus="selectText"
           v-model="searchTerm"
+          variant="outline"
           :placeholder="$t('search.placeholder')"
-          class="overflow-hidden z-[1] w-full"
+          class="z-[1] w-full"
           :input-class="open ? '!bg-white dark:!bg-dark-blue' : ''"
         >
           <template #trailing>
-            <IconSearch />
+            <UIcon
+              v-if="loading"
+              name="i-heroicons-arrow-path-16-solid"
+              class="text-blue-500 animate-spin"
+            />
+            <IconSearch v-else />
           </template>
         </UInput>
       </div>
@@ -183,10 +193,7 @@ const selectText = (event) => {
         role="listbox"
         class="bg-white dark:bg-dark-blue w-full rounded-lg absolute top-[calc(100%+0.375rem)] left-0 overflow-hidden p-2.5"
       >
-        <div
-          class="h-auto max-h-[calc(100vh)] md:max-h-[50vh] overflow-y-auto"
-          ref="listboxRef"
-        >
+        <div class="h-auto max-h-[80vh] overflow-y-auto" ref="listboxRef">
           <NuxtLinkLocale
             v-for="(option, index) in filteredOptions"
             :key="option.id"
@@ -195,7 +202,7 @@ const selectText = (event) => {
             :data-highlighted="activeIndex === index ? 'true' : undefined"
             tabindex="-1"
             @mouseover="activeIndex = index"
-            class="flex items-center gap-3 px-2.5 py-3 relative select-none group truncate cursor-pointer rounded-md data-[highlighted]:outline-none data-[highlighted]:bg-blue-100 data-[highlighted]:dark:bg-white-100"
+            class="flex items-center gap-3 p-2 relative select-none group truncate cursor-pointer rounded-md data-[highlighted]:outline-none data-[highlighted]:bg-blue-100 data-[highlighted]:dark:bg-white-100"
           >
             <img
               :src="option.image_small"
@@ -203,7 +210,9 @@ const selectText = (event) => {
               class="h-10 aspect-[3/2] rounded-md"
             />
             <div class="flex flex-col gap-1">
-              <h3 class="title text-sm truncate line-clamp-1">
+              <h3
+                class="title text-sm truncate line-clamp-1 !whitespace-break-spaces"
+              >
                 {{ option.title }}
               </h3>
               <BaseMeta

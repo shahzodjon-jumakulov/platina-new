@@ -19,7 +19,7 @@ export default defineAppConfig({
       color: {
         white: {
           outline:
-            "bg-blue-100 dark:bg-white-100 text-black-500 dark:text-white-500 ring-0 focus:ring-0 focus:bg-white",
+            "bg-blue-100 dark:bg-white-100 text-black-500 dark:text-white-500 ring-0 focus:bg-white focus:ring-2 ring-light-blue ring-inset",
         },
       },
       icon: {

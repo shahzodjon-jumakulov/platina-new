@@ -19,7 +19,7 @@
   "articles": "Maqolalar",
   "videos": "Videolar",
   "video": "Video",
-  "similar": "Mavzuga oid",
+  "similar": "Tavsiya etamiz",
   "more": "Yana yuklash",
   "business": "Biznes",
   "watch_on_telegram": "Telegramda kuzatib boring!",
@@ -29,6 +29,11 @@
   "main_page": "Asosiy sahifa",
   "menu": "Menyu",
   "ruknlar": "Ruknlar",
+  "settings": "Sozlamalar",
+  "site_lang": "Sayt tili",
+  "site_appearance": "Sayt ko‘rinishi",
+  "light": "Kunduzgi",
+  "dark": "Tungi",
   "reklama": {
     "phone": "Reklama va tijoriy hamkorlik masalasida quyidagi raqamga murojaat qiling.",
     "telegram": "Reklama bilan bog‘liq savollarni Telegram manziliga yuborishingiz mumkin."

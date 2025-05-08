@@ -78,7 +78,12 @@ const updatePassedBullets = () => {
 </script>
 
 <template>
-  <BaseCard :to="to" :title="title" v-if="news.length" :transparent="transparentBg">
+  <BaseCard
+    :to="to"
+    :title="title"
+    v-if="news.length"
+    :transparent="transparentBg"
+  >
     <div
       class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 max-sm:px-4 max-md:hidden"
     >
@@ -95,9 +100,13 @@ const updatePassedBullets = () => {
             'bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-2xl':
               color === 'light',
           },
+          { 'bg-white dark:bg-white-100 rounded-xl': transparentBg },
         ]"
       >
-        <article class="flex flex-col gap-3">
+        <article
+          class="flex flex-col"
+          :class="transparentBg ? 'gap-0' : 'gap-3'"
+        >
           <BaseOverlayImg
             class="!rounded-xl"
             :src="item.image_large || item.image_medium"
@@ -105,12 +114,9 @@ const updatePassedBullets = () => {
           />
           <div
             class="flex flex-col gap-1.5"
-            :class="{ 'p-4 pt-0': color }"
+            :class="{ 'p-4 pt-0': color, '!p-4': transparentBg }"
           >
-            <BaseMeta
-              :category="item.category.name"
-              :date="item.publish"
-            />
+            <BaseMeta :category="item.category.name" :date="item.publish" />
             <h3
               class="title text-lg md:text-base !leading-std line-clamp-3"
               v-hover-transition

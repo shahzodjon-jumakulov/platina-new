@@ -55,11 +55,11 @@ onBeforeUnmount(() => {
         v-for="item in categories"
         :key="item.id"
         :to="`/category/${item.slug}`"
-        class="py-4 text-sm font-semibold group"
+        class="py-4 text-base font-semibold group"
         :id="`menu-item-${item.id}`"
-        v-hover-transition
       >
         <span
+          v-hover-transition
           :class="
             activeIndex === item.id
               ? 'text-light-blue dark:text-light-blue-dark'

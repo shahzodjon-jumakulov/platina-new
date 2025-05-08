@@ -4,8 +4,8 @@ const hoverTransition = {
   mounted(el) {
     el.classList.add("group-hover:transition-colors");
 
-    const transitionClasses = ["transition-colors", "duration-150"];
-    const transitionDuration = 150;
+    const transitionClasses = ["transition-colors", "duration-100"];
+    const transitionDuration = 100;
 
     const addTransition = () => el.classList.add(...transitionClasses);
     const removeTransition = () => {

@@ -57,9 +57,11 @@ await useMyFetch(`/news/similar/${data.value?.id}`, {
 </script>
 
 <template>
-  <UContainer class="flex flex-col items-center gap-4 md:gap-5 sm:py-5">
-    <SectionDetail :data="data" />
-    <GroupCardSlider :news="similar" :title="$t('similar')" transparent-bg />
+  <UContainer class="flex flex-col gap-4 md:gap-8 sm:py-8">
+    <div class="flex flex-col items-center gap-5 self-center">
+      <SectionDetail :data="data" />
+      <GroupCardSlider :news="similar" :title="$t('similar')" transparent-bg />
+    </div>
     <GroupBusiness transparent-bg />
   </UContainer>
 </template>

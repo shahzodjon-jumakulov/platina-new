@@ -38,7 +38,7 @@ defineProps({
     </button>
 
     <div
-      class="block bg-white dark:bg-dark-blue h-[calc(100%-0.25rem)] w-[calc((100%-0.25rem)/2)] absolute top-0 rounded-md transition-all duration-300 ease-in-out m-0.5"
+      class="block bg-white dark:bg-white-200 h-[calc(100%-0.25rem)] w-[calc((100%-0.25rem)/2)] absolute top-0 rounded-md transition-all duration-300 ease-in-out m-0.5"
       :class="{
         'left-0': model === tabs[0].value,
         'left-[calc(50%-0.125rem)]': model === tabs[1].value,

@@ -57,7 +57,7 @@ defineProps({
           <li v-for="(item, index) in data.tags" :key="index">
             <NuxtLinkLocale
             :to="`/tag/${encodeURIComponent(item)}`"
-              class="px-2.5 py-2 rounded bg-light-blue-100 dark:bg-white-100 text-xs leading-std text-light-blue dark:text-white-600"
+              class="px-2.5 py-2 rounded bg-light-blue-100 dark:bg-light-blue-dark-200 text-xs leading-std text-light-blue dark:text-light-blue-dark hover:bg-light-blue-200 dark:hover:bg-light-blue-dark-300 transition-colors duration-200 ease-in-out"
             >
               {{ item }}
             </NuxtLinkLocale>

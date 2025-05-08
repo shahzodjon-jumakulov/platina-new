@@ -104,7 +104,7 @@ useSchemaOrg(breadcrumbList);
         </div>
         <p
           v-if="cat?.description"
-          class="max-w-md text-center text-sm md:text-base"
+          class="max-w-md text-center text-sm md:text-base text-white"
         >
           {{ cat.description }}
         </p>

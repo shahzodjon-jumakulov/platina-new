@@ -41,7 +41,7 @@ const nav = [
 
 <template>
   <nav
-    class="sticky bottom-0 z-[49] md:hidden rounded-t-2xl bg-white dark:bg-[#13142D] border-t border-dark-blue-200 dark:border-white-100 h-16 px-2"
+    class="fixed bottom-0 z-[49] md:hidden rounded-t-2xl bg-white dark:bg-[#13142D] border-t border-dark-blue-200 dark:border-white-100 h-16 px-2"
   >
     <div class="grid grid-cols-5">
       <NuxtLinkLocale

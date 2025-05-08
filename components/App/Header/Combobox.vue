@@ -2,6 +2,7 @@
 const route = useRoute();
 const query = route.query;
 const localePath = useLocalePath();
+const { locale } = useI18n();
 const props = defineProps({
   alwaysOpen: {
     type: Boolean,
@@ -86,18 +87,27 @@ watch(searchTerm, async () => {
     }, 300);
   }
 });
-await useMyFetch("/news/popular/", {
-  params: { limit: 6 },
-  server: false,
-  lazy: true,
-  onResponse({ response }) {
-    if (response._data?.results?.length) {
-      popular.value = response._data.results;
-      filteredOptions.value = popular.value;
-      loading.value = false;
-    }
-  },
-});
+
+const popularNews = loadedPopularNews();
+if (popularNews.value.lang === locale.value && popularNews.value.news.length) {
+  popular.value = popularNews.value.news;
+  filteredOptions.value = popular.value;
+  loading.value = false;
+} else {
+  loading.value = true;
+  await useMyFetch("/news/popular/", {
+    params: { limit: 6 },
+    server: false,
+    lazy: true,
+    onResponse({ response }) {
+      if (response._data?.results?.length) {
+        popular.value = response._data.results;
+        filteredOptions.value = popular.value;
+        loading.value = false;
+      }
+    },
+  });
+}
 
 const searchQuery = () => {
   if (searchTerm.value?.trim().length < 3) return;
@@ -174,7 +184,7 @@ const selectText = (event) => {
           <UIcon
             v-if="loading"
             name="i-heroicons-arrow-path-16-solid"
-            class="text-blue-500 dark:text-white-500 animate-spin"
+            class="text-blue-500 dark:text-white-500 animate-spin size-5"
           />
           <IconSearch v-else />
         </template>

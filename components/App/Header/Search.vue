@@ -2,7 +2,7 @@
 const isOpen = ref(false);
 const ui = {
   container: "items-start sm:items-start",
-  padding: "pt-[5rem] sm:p-4",
+  padding: "sm:p-4",
   overlay: {
     background: "bg-black-500 dark:bg-black-500",
   },

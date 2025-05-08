@@ -4,6 +4,9 @@ export const loadedPinnedNews = () =>
 export const loadedLatestNews = () =>
   useState(() => ({ news: [], lang: "", time: 0 }));
 
+export const loadedPopularNews = () =>
+  useState(() => ({ news: [], lang: "", time: 0 }));
+
 export const useSelectedNews = () => useState(() => null);
 
 export const storeSelected = (news) => {

@@ -87,10 +87,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <UContainer class="py-5">
+  <UContainer class="py-5 max-sm:px-4">
     <div class="flex flex-col gap-8">
       <div class="grid grid-cols-1 gap-4 md:gap-5 !max-w-[38rem] mx-auto">
-        <div class="flex gap-4 justify-between">
+        <div class="flex max-md:flex-col gap-3 md:gap-4 justify-between">
           <div class="flex gap-3">
             <IconSearchHexagon :loading="loading" />
 
@@ -122,16 +122,16 @@ onMounted(() => {
               <BaseOverlayImg
                 :src="item.image_medium"
                 :data="item"
-                class="h-[8.125rem] aspect-[3/2] max-md:rounded-lg shrink-0 self-center"
+                class="h-[5.875rem] md:h-[8.125rem] aspect-[3/2] max-md:rounded-lg shrink-0 self-center"
               />
 
-              <div class="p-4 flex flex-col gap-1.5">
+              <div class="p-4 max-md:px-3 flex flex-col gap-1.5">
                 <BaseMeta :category="item.category.name" :date="item.publish" />
-                <h3 class="title text-base line-clamp-3" v-hover-transition>
+                <h3 class="title text-sm md:text-base line-clamp-3" v-hover-transition>
                   {{ item.title }}
                 </h3>
                 <div
-                  class="line-clamp-3 text-xs text-black-500 dark:text-white-500"
+                  class="line-clamp-3 text-xs text-black-500 dark:text-white-500 max-md:hidden"
                   v-html="item.short_content"
                 ></div>
               </div>

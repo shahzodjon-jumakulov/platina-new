@@ -28,10 +28,15 @@ defineProps({
     ></div>
 
     <div
-      class="absolute bottom-3 right-3 z-[1]"
+      class="absolute bottom-2 right-2 md:bottom-3 md:right-3 z-[1]"
       v-if="data.youtube_link?.length > 0"
     >
-      <img src="~/assets/icons/video-icon.svg" alt="video" class="h-8" />
+      <img
+        src="~/assets/icons/video-icon.svg"
+        role="presentation"
+        alt=""
+        class="h-6 md:h-8"
+      />
     </div>
   </div>
 </template>

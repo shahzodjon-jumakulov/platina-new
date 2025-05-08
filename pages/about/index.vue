@@ -1,6 +1,5 @@
 <script setup>
 const { data } = await useMyFetch("/pages/about/");
-console.log(data.value);
 const ogImage = data.value.image;
 </script>
 
@@ -24,7 +23,7 @@ const ogImage = data.value.image;
         playsinline
         loop
       ></video>
-      <NuxtImg :src="ogImage" v-if="ogImage" />
+      <img :src="ogImage" v-if="ogImage" />
       <div
         class="content text-black dark:text-white-600"
         v-html="modifyContent(data.content)"

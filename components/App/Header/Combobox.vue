@@ -175,11 +175,17 @@ const selectText = (event) => {
         @keydown="handleKeyDown"
         @focus="selectText"
         v-model="searchTerm"
+        color="white"
         variant="outline"
         :placeholder="$t('search.placeholder')"
         class="z-[1] w-full"
         :input-class="open ? '!bg-white dark:!bg-dark-blue' : ''"
       >
+        <template #leading>
+          <button @click="closeCombobox" class="lg:hidden">
+            <IconArrowBack class="rotate-180" />
+          </button>
+        </template>
         <template #trailing>
           <UIcon
             v-if="loading"
@@ -261,7 +267,7 @@ const selectText = (event) => {
     <div
       v-if="open && !alwaysOpen"
       @click="open = false"
-      class="fixed inset-0 h-screen z-[-1] bg-black-500 dark:bg-black-500 transition-colors duration-300 max-md:hidden"
+      class="fixed inset-0 h-screen w-screen z-[-1] bg-black-500 dark:bg-black-500 transition-colors duration-300 max-md:hidden"
     ></div>
   </div>
 </template>

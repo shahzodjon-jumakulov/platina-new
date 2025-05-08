@@ -100,7 +100,13 @@ useSchemaOrg(schemaNodes);
     </div>
 
     <div class="lg:absolute bottom-0 left-0 w-full max-sm:px-4">
-      <UButton label="Кўпроқ янгиликлар" variant="soft" block size="lg" />
+      <UButton
+        :label="$t('more_news')"
+        variant="soft"
+        block
+        size="lg"
+        :to="$localePath('/posts/latest')"
+      />
     </div>
   </div>
 </template>

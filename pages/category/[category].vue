@@ -89,20 +89,23 @@ useSchemaOrg(breadcrumbList);
       ref="categoryRef"
       :style="{ backgroundImage: `url(${cat?.image})` }"
     >
-      <div class="flex flex-col gap-5 items-center z-[1]">
+      <div class="flex flex-col gap-3 md:gap-5 items-center z-[1]">
         <div class="flex items-center gap-4">
           <img
             v-if="cat?.icon"
             :src="cat.icon"
             alt=""
             role="presentation"
-            class="select-none w-[3.188rem]"
+            class="select-none w-8 md:w-[3.188rem]"
           />
-          <h1 class="text-5xl leading-std font-bold text-white">
-            {{ cat?.name }}
+          <h1 class="text-[2rem] md:text-5xl leading-std font-bold text-white">
+            {{ cat?.name || news[0]?.category.name }}
           </h1>
         </div>
-        <p class="max-w-md text-center" v-if="cat?.description">
+        <p
+          v-if="cat?.description"
+          class="max-w-md text-center text-sm md:text-base"
+        >
           {{ cat.description }}
         </p>
       </div>

@@ -15,7 +15,11 @@ defineProps({
     >
       <div class="flex flex-col gap-4">
         <header class="flex flex-col gap-3">
-          <BaseMeta :category="data.category.name" :date="data.publish" />
+          <BaseMeta
+            :category="data.category.name"
+            :link="data.category.slug"
+            :date="data.publish"
+          />
           <h1
             class="text-blue dark:text-white-600 text-xl md:text-2xl !leading-std font-bold"
           >
@@ -50,12 +54,13 @@ defineProps({
 
       <section>
         <ul class="flex items-center gap-2.5 flex-wrap">
-          <li
-            v-for="(item, index) in data.tags"
-            :key="index"
-            class="px-2.5 py-2 rounded bg-light-blue-100 dark:bg-white-100 text-xs leading-std text-light-blue dark:text-white-600"
-          >
-            {{ item }}
+          <li v-for="(item, index) in data.tags" :key="index">
+            <NuxtLinkLocale
+            :to="`/tag/${encodeURIComponent(item)}`"
+              class="px-2.5 py-2 rounded bg-light-blue-100 dark:bg-white-100 text-xs leading-std text-light-blue dark:text-white-600"
+            >
+              {{ item }}
+            </NuxtLinkLocale>
           </li>
         </ul>
       </section>

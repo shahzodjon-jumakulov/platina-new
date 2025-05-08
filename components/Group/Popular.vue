@@ -13,7 +13,7 @@ const { data } = await useMyFetch("/news/popular/", {
 </script>
 
 <template>
-  <BaseCard to="/" :title="$t('popular')" v-if="news.length">
+  <BaseCard to="/posts/popular" :title="$t('popular')" v-if="news.length">
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5">
       <NuxtLinkLocale
         :to="useNewsUrl(news[0].publish, news[0].slug)"
@@ -24,7 +24,7 @@ const { data } = await useMyFetch("/news/popular/", {
           class="max-md:bg-light-blue-100 max-md:dark:bg-light-blue-dark-100 rounded-2xl flex flex-col gap-3"
         >
           <BaseOverlayImg
-            :src="news[0].image_small"
+            :src="news[0].image_large"
             :data="news[0]"
           />
 
@@ -74,7 +74,7 @@ const { data } = await useMyFetch("/news/popular/", {
 
             <BaseOverlayImg
               class="max-md:h-20 shrink-0 !rounded-lg"
-              :src="item.image_small"
+              :src="item.image_large"
               :data="item"
             />
           </article>

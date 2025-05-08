@@ -13,5 +13,10 @@ const { data } = await useMyFetch("/news/all/", {
 </script>
 
 <template>
-  <GroupCardSlider :news="news" :title="$t('article')" to="/" :short="false" />
+  <GroupCardSlider
+    :news="news"
+    :title="$t('article')"
+    to="/category/maqola"
+    :short="false"
+  />
 </template>

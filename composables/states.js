@@ -14,4 +14,6 @@ export const storeSelected = (news) => {
   selectedNews.value = news;
 };
 
-export const useShorts = () => useState(() => ({ open: false, url: "", }));
+export const useShorts = () => useState(() => ({ open: false, url: "" }));
+
+export const useSearchModal = () => useState(() => false);

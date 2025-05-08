@@ -1,10 +1,10 @@
 <script setup>
-//
+const isLenta = ref(false);
 </script>
 
 <template>
   <header
-    class="bg-white-600 dark:bg-white-100 border-b border-secondary dark:border-light-blue-100 sticky top-0 z-50 shadow-sm backdrop-blur-lg"
+    class="bg-white-600 dark:bg-white-100 border-b border-secondary dark:border-light-blue-100 sticky top-0 z-50 shadow-sm backdrop-blur-2xl dark:backdrop-blur-3xl"
   >
     <UContainer class="md:py-5 lg:pb-0 max-sm:px-2">
       <div class="flex flex-col gap-2">

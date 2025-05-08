@@ -8,10 +8,13 @@ export default defineAppConfig({
     input: {
       rounded: "rounded-lg",
       size: {
-        sm: "text-sm",
+        sm: "text-base lg:text-sm",
       },
       padding: {
         sm: "px-5 py-3",
+      },
+      leading: {
+        padding: { sm: "max-lg:ps-10 ps-4" },
       },
       trailing: {
         padding: { sm: "pe-16" },
@@ -19,10 +22,13 @@ export default defineAppConfig({
       color: {
         white: {
           outline:
-            "bg-blue-100 dark:bg-white-100 text-black-500 dark:text-white-500 ring-0 focus:bg-white focus:ring-2 ring-light-blue ring-inset",
+            "bg-blue-100 dark:bg-white-100 text-black-500 dark:text-white-500 ring-0 focus:bg-white focus:ring-2 focus:ring-light-blue dark:focus:ring-light-blue-dark focus:ring-inset placeholder:text-black-400 placeholder:dark:text-white-400",
         },
       },
       icon: {
+        leading: {
+          pointer: "pointer-events-auto",
+        },
         trailing: {
           padding: { sm: "px-5" },
         },

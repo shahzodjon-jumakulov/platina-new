@@ -13,7 +13,11 @@ const { data } = await useMyFetch("/news/all/", {
 </script>
 
 <template>
-  <BaseCard :title="news[0]?.category.name" to="/" v-if="news.length">
+  <BaseCard
+    v-if="news.length"
+    :title="news[0]?.category.name"
+    to="/category/intervyu"
+  >
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-y-4">
       <div
         class="flex flex-col gap-4 max-lg:[&:nth-child(n+6)]:hidden max-sm:px-4"
@@ -46,7 +50,7 @@ const { data } = await useMyFetch("/news/all/", {
                 {{ item.title }}
               </h3>
               <div
-                class="short_content md:max-lg:text-xs text-sm !leading-snug line-clamp-3"
+                class="short-content md:max-lg:text-xs text-sm !leading-snug line-clamp-3"
                 v-html="item.short_content"
               ></div>
             </div>

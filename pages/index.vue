@@ -28,7 +28,7 @@ useSchemaOrg(webpageSchema);
       <Hero />
       <Articles class="max-md:hidden" />
       <Interview />
-      <GroupCardSlider :title="news[0]?.category.name" to="/" :news="news" color="light" />
+      <GroupCardSlider :title="news[0]?.category.name" to="/category/tahlil" :news="news" color="light" />
       <Popular />
 
       <GroupTvSlider />

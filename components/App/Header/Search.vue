@@ -1,5 +1,5 @@
 <script setup>
-const isOpen = ref(false);
+const isOpen = useSearchModal();
 const ui = {
   container: "items-start sm:items-start",
   padding: "sm:p-4",

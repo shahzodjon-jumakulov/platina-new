@@ -11,15 +11,18 @@ defineProps({
   <div class="flex flex-col gap-4 md:gap-5 max-w-[50.25rem] w-full">
     <article
       v-if="data"
-      class="bg-white dark:bg-white-100 p-4 md:px-8 md:py-5 flex flex-col gap-4 md:gap-5 max-sm:rounded-t-none rounded-2xl w-full"
+      class="bg-white dark:bg-white-100 p-4 md:px-8 md:py-5 flex flex-col gap-4 md:gap-5 max-sm:rounded-t-none rounded-2xl w-full relative"
     >
       <div class="flex flex-col gap-4">
         <header class="flex flex-col gap-3">
-          <BaseMeta
-            :category="data.category.name"
-            :link="data.category.slug"
-            :date="data.publish"
-          />
+          <div class="flex items-center justify-between">
+            <BaseMeta
+              :category="data.category.name"
+              :link="data.category.slug"
+              :date="data.publish"
+            />
+            <BaseShare :short="data.short_slug" :title="data.title" />
+          </div>
           <h1
             class="text-blue dark:text-white-600 text-xl md:text-2xl !leading-std font-bold"
           >
@@ -33,7 +36,28 @@ defineProps({
         ></section>
       </div>
 
-      <figure class="flex flex-col gap-2">
+      <figure
+        v-if="data.youtube_link"
+        class="w-full aspect-[16/9] rounded-2xl overflow-hidden"
+      >
+        <ScriptYouTubePlayer
+          ref="video"
+          :video-id="getYtId(data.youtube_link, true)"
+        >
+          <template #awaitingLoad>
+            <div class="absolute-center h-[48px] w-[68px]">
+              <svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%">
+                <path
+                  d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"
+                  fill="#f00"
+                />
+                <path d="M 45,24 27,14 27,34" fill="#fff" />
+              </svg>
+            </div>
+          </template>
+        </ScriptYouTubePlayer>
+      </figure>
+      <figure class="flex flex-col gap-2" v-else>
         <img
           :src="data.image_large"
           :alt="data.image_name || data.title"
@@ -56,7 +80,7 @@ defineProps({
         <ul class="flex items-center gap-2.5 flex-wrap">
           <li v-for="(item, index) in data.tags" :key="index">
             <NuxtLinkLocale
-            :to="`/tag/${encodeURIComponent(item)}`"
+              :to="`/tag/${encodeURIComponent(item)}`"
               class="px-2.5 py-2 rounded bg-light-blue-100 dark:bg-light-blue-dark-200 text-xs leading-std text-light-blue dark:text-light-blue-dark hover:bg-light-blue-200 dark:hover:bg-light-blue-dark-300 transition-colors duration-200 ease-in-out"
             >
               {{ item }}

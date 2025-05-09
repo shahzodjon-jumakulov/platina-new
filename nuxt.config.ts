@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "nuxt-schema-org",
     "@vueuse/nuxt",
+    "@nuxt/scripts",
   ],
   css: ["~/assets/css/main.scss"],
 

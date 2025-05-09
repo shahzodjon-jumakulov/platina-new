@@ -85,7 +85,7 @@ const links = computed(() => [
       <UContainer class="w-full pb-4">
         <div class="flex flex-col sm:gap-4">
           <header
-            class="px-2 w-full flex items-center justify-between rounded-b-2xl bg-white dark:bg-white-100 border-b border-light-blue-200 h-14"
+            class="px-2 w-full flex items-center justify-between rounded-b-2xl bg-white dark:bg-white-100 border-b border-light-blue-200 h-14 sticky top-0 z-[1] backdrop-blur-xl"
           >
             <button class="p-1" @click="isOpen = false">
               <IconClose class="size-8" />

@@ -9,8 +9,10 @@ watch(locale, () => {
 
 <template>
   <UPopover v-model:open="open">
-    <button class="px-2 py-3 flex items-center">
-      <span class="px-1 text-sm font-medium text-black dark:text-white">
+    <button class="px-2 py-3 flex items-center group">
+      <span
+        class="px-1 text-sm font-medium text-black dark:text-white group-hover:text-light-blue dark:group-hover:text-light-blue-dark"
+      >
         {{ $i18n.locale === "uz" ? "Ўзбекча" : "O‘zbekcha" }}
       </span>
       <IconChevronDown :class="open ? '' : ''" />

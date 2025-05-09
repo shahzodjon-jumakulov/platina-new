@@ -43,6 +43,7 @@ defineProps({
         <ScriptYouTubePlayer
           ref="video"
           :video-id="getYtId(data.youtube_link, true)"
+          :placeholder-attrs="{ loading: 'eager' }"
         >
           <template #awaitingLoad>
             <div class="absolute-center h-[48px] w-[68px]">

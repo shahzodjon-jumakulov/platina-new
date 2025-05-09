@@ -2,7 +2,6 @@
 const route = useRoute();
 const { locale, t } = useI18n();
 const category = ref(route.params.category);
-const categoryRef = ref(null);
 
 const categoriesState = useCategories();
 const categories = computed(() => categoriesState.categories.value.categories);
@@ -74,7 +73,6 @@ const showMore = () => {
 
 onMounted(() => {
   loadMore();
-  categoryRef.value.style.backgroundImage = `url(${cat.value?.image})`;
 });
 
 const { generateBreadcrumbList } = useSchemaProperties();
@@ -85,10 +83,14 @@ useSchemaOrg(breadcrumbList);
 <template>
   <div class="h-[10rem] md:h-[14rem] overflow-hidden">
     <div
-      class="flex-center h-full relative z-[1] max-sm:px-4 bg-cover bg-blend-luminosity bg-blue"
-      ref="categoryRef"
-      :style="{ backgroundImage: `url(${cat?.image})` }"
+      class="flex-center relative z-[1] h-full max-sm:px-4 bg-cover bg-center bg-blend-luminosity bg-blue"
     >
+      <img
+        :src="cat?.image"
+        alt=""
+        role="presentation"
+        class="absolute w-full h-full object-cover mix-blend-luminosity"
+      />
       <div class="flex flex-col gap-3 md:gap-5 items-center z-[1]">
         <div class="flex items-center gap-4">
           <img
@@ -99,7 +101,7 @@ useSchemaOrg(breadcrumbList);
             class="select-none w-8 md:w-[3.188rem]"
           />
           <h1 class="text-[2rem] md:text-5xl leading-std font-bold text-white">
-            {{ cat?.name || news[0]?.category.name }}
+            {{ cat?.name || news[0]?.category?.name }}
           </h1>
         </div>
         <p
@@ -116,40 +118,54 @@ useSchemaOrg(breadcrumbList);
     </div>
   </div>
 
-  <UContainer class="py-7 max-sm:px-4">
+  <UContainer class="md:py-7">
     <div class="flex flex-col gap-7">
       <section class="grid grid-cols-1 gap-5">
         <div
           v-if="category === 'platina-tv'"
-          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 p-4"
         >
           <CardShorts v-for="item in news" :key="item" :video="item" />
         </div>
 
         <div
           v-else
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+          class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 max-md:bg-white max-sm:py-4"
         >
-          <NuxtLinkLocale
-            v-for="item in news"
+          <article
+            v-for="(item, index) in news"
             :key="item.id"
-            :to="useNewsUrl(item.publish, item.slug)"
-            class="group bg-white dark:bg-white-100 rounded-xl overflow-hidden"
+            class="flex flex-col gap-4 max-sm:px-4 md:bg-white md:dark:bg-white-100 md:rounded-xl overflow-hidden"
           >
-            <article class="flex flex-col">
-              <BaseOverlayImg
-                :src="item.image_large"
-                :data="item"
-                class="!rounded-none"
-              />
-              <div class="p-4 flex flex-col gap-1.5">
-                <BaseMeta :category="item.category.name" :date="item.publish" />
-                <h3 class="title line-clamp-3 text-base" v-hover-transition>
-                  {{ item.title }}
-                </h3>
-              </div>
-            </article>
-          </NuxtLinkLocale>
+            <UDivider v-if="index !== 0" class="md:hidden" />
+
+            <NuxtLinkLocale
+              :to="useNewsUrl(item.publish, item.slug)"
+              class="group"
+            >
+              <article
+                class="flex flex-row-reverse max-md:justify-between max-md:gap-3 md:flex-col"
+              >
+                <BaseOverlayImg
+                  :src="item.image_large"
+                  :data="item"
+                  class="md:!rounded-none max-md:h-20 max-md:shrink-0"
+                />
+                <div class="md:p-4 flex flex-col gap-1.5">
+                  <BaseMeta
+                    :category="item.category.name"
+                    :date="item.publish"
+                  />
+                  <h3
+                    class="title line-clamp-3 text-sm md:text-base"
+                    v-hover-transition
+                  >
+                    {{ item.title }}
+                  </h3>
+                </div>
+              </article>
+            </NuxtLinkLocale>
+          </article>
         </div>
 
         <UButton

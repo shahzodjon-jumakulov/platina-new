@@ -1,0 +1,11 @@
+stages:  
+  - deploy  
+
+deploy:  
+  stage: deploy  
+  script:  
+    - ssh -oStrictHostKeyChecking=no platina@109.205.183.3 -p 2222 "cd /var/www/platina/platinauz-front && git pull && npm install && npm run build"  
+    - ssh -oStrictHostKeyChecking=no platina@109.205.183.3 -p 2222 "pm2 restart platinauz"  
+  environment:  
+    name: production  
+    url: https://platina.uz/

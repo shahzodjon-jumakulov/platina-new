@@ -123,19 +123,19 @@ useSchemaOrg(breadcrumbList);
       <section class="grid grid-cols-1 gap-5">
         <div
           v-if="category === 'platina-tv'"
-          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 p-4"
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5 max-md:p-4"
         >
           <CardShorts v-for="item in news" :key="item" :video="item" />
         </div>
 
         <div
           v-else
-          class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 max-md:bg-white max-sm:py-4"
+          class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 max-md:bg-white max-md:dark:bg-white-100 max-md:py-4 max-md:rounded-b-xl"
         >
           <article
             v-for="(item, index) in news"
             :key="item.id"
-            class="flex flex-col gap-4 max-sm:px-4 md:bg-white md:dark:bg-white-100 md:rounded-xl overflow-hidden"
+            class="flex flex-col gap-4 max-md:px-4 md:bg-white md:dark:bg-white-100 md:rounded-xl overflow-hidden"
           >
             <UDivider v-if="index !== 0" class="md:hidden" />
 

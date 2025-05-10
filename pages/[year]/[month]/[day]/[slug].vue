@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  middleware: ["i18n"],
+  // middleware: ["i18n"],
 });
 
 const route = useRoute();

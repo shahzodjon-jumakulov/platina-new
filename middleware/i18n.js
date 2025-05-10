@@ -8,6 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const path = localePath(to.path, cookieLang);
 
   if (lang && to.path !== path) {
+    console.log("Redirecting to", path);
     return navigateTo(path, { redirectCode: 302 });
   }
 

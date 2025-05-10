@@ -8,7 +8,13 @@ export default defineNuxtConfig({
     "nuxt-schema-org",
     "@vueuse/nuxt",
     "@nuxt/scripts",
+    "nuxt-gtag",
   ],
+
+  gtag: {
+    id: "G-07JCNRX4ZR",
+  },
+  
   css: ["~/assets/css/main.scss"],
 
   runtimeConfig: {
@@ -40,7 +46,7 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: "i18n_redirected",
       fallbackLocale: "uz",
-      alwaysRedirect: true, // redirects to locale version
+      alwaysRedirect: true,
       redirectOn: "root",
     },
     bundle: {

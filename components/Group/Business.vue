@@ -80,6 +80,15 @@ const updatePassedBullets = () => {
           {{ $t("business") }}
         </h2>
       </div>
+
+      <NuxtLinkLocale to="/category/biznes" class="all-link group">
+        <span
+          class="text-xs leading-normal font-medium text-black dark:text-white-600 px-1"
+        >
+          {{ $t("all") }}
+        </span>
+        <IconArrowRight />
+      </NuxtLinkLocale>
     </div>
 
     <div class="grid grid-cols-3 lg:grid-cols-4 gap-5 max-md:hidden">

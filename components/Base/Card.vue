@@ -46,8 +46,8 @@ defineProps({
   </section>
 </template>
 
-<style scoped lang="scss">
-.all-link {
+<style lang="scss">
+a.all-link {
   @apply relative px-2 py-1 rounded-md flex items-center hover:bg-black-100 dark:hover:bg-white-200;
 
   &:hover svg {

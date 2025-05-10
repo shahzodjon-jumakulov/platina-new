@@ -59,6 +59,44 @@ const { data } = await useMyFetch("/news/video/shorts/", {
           <CardShorts :video="item" />
         </SwiperSlide>
       </Swiper>
+
+      <div class="pagination pagination-tv flex gap-2 justify-center"></div>
     </div>
   </section>
 </template>
+
+<style scoped lang="scss">
+.pagination {
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-opacity: 1;
+  --swiper-pagination-bullet-horizontal-gap: 0;
+  --swiper-pagination-bullet-height: 0.5rem;
+  --swiper-pagination-bullet-width: 0.5rem;
+  --swiper-pagination-bullet-border-radius: 1rem;
+
+  &:deep(.swiper-pagination-bullet) {
+    transition: all 0.2s ease-in-out;
+    will-change: width;
+    cursor: pointer;
+    background-color: #0066cc66;
+    overflow: hidden;
+
+    .dark & {
+      background-color: #178FE066;
+    }
+
+    &:hover {
+      background-color: #0066cc;
+    }
+  }
+
+  &:deep(.swiper-pagination-bullet-active) {
+    width: 2rem;
+    background-color: #0066cc;
+
+    .dark & {
+      background-color: #178FE0;
+    }
+  }
+}
+</style>

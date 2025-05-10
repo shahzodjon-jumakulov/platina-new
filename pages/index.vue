@@ -22,7 +22,7 @@ useSchemaOrg(webpageSchema);
 </script>
 
 <template>
-  <UContainer>
+  <UContainer class="max-sm:pb-4">
     <h1 class="sr-only">{{ $t("meta.title") }}</h1>
     <div class="flex flex-col gap-5 sm:py-5">
       <Hero />

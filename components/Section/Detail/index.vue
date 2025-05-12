@@ -142,6 +142,20 @@ defineProps({
   }
 }
 
+.content:deep(ol) {
+  list-style-type: decimal;
+  list-style-position: outside;
+  padding-left: 20px;
+  @apply space-y-2;
+}
+
+.content:deep(ul) {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 20px;
+  @apply space-y-2;
+}
+
 .gradient {
   background: linear-gradient(
     180deg,

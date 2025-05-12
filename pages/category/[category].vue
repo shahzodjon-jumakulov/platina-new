@@ -86,6 +86,7 @@ useSchemaOrg(breadcrumbList);
       class="flex-center relative z-[1] h-full max-sm:px-4 bg-cover bg-center bg-blend-luminosity bg-blue"
     >
       <img
+        v-if="cat?.image"
         :src="cat?.image"
         alt=""
         role="presentation"

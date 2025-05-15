@@ -113,14 +113,6 @@ defineProps({
   display: block;
 }
 
-.content:deep(a) {
-  color: #0066cc !important;
-}
-
-.content:deep(a:hover) {
-  text-decoration: underline;
-}
-
 .content:deep(span) {
   background-color: transparent !important;
   color: #000000 !important;
@@ -128,6 +120,26 @@ defineProps({
   .dark & {
     color: rgba(255, 255, 255, 0.88) !important;
   }
+}
+
+.content:deep(a) {
+  color: #0066cc !important;
+
+  .dark & {
+    color: #178fe0 !important;
+  }
+
+  span {
+    color: #0066cc !important;
+
+    .dark & {
+      color: #178fe0 !important;
+    }
+  }
+}
+
+.content:deep(a:hover) {
+  text-decoration: underline;
 }
 
 .content:deep(figcaption),

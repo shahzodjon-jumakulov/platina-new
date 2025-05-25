@@ -84,6 +84,7 @@ const updatePassedBullets = () => {
       <NuxtLinkLocale to="/category/biznes" class="all-link group">
         <span
           class="text-xs leading-normal font-medium text-black dark:text-white-600 px-1"
+          :class="{'!text-white-600': transparentBg}"
         >
           {{ $t("all") }}
         </span>

@@ -101,6 +101,10 @@ defineProps({
 .content:deep(figure) {
   margin: 1rem auto 0 !important;
   width: fit-content;
+
+  &.media {
+    width: 100%;
+  }
 }
 
 .content :deep(img) {

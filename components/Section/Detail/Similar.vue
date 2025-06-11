@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="grid grid-cols-1 gap-4">
+  <section class="grid grid-cols-1 gap-4" v-if="news.length">
     <div class="flex items-center justify-between max-sm:px-4">
       <div class="flex items-center gap-2.5">
         <IconHexagon class="h-2.5 md:h-3" />

@@ -94,7 +94,8 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-.content > :deep(*:not(:first-child)) {
+.content > :deep(*:not(:first-child)),
+.content > :deep(blockquote p:not(:first-child)) {
   margin-top: 1rem;
 }
 

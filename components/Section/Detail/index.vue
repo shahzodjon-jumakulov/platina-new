@@ -108,6 +108,10 @@ defineProps({
   }
 }
 
+.content :deep(figure.image_resized) {
+  width: fit-content !important;
+}
+
 .content :deep(img) {
   border-radius: 8px;
   height: auto !important;

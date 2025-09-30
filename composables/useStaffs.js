@@ -4,8 +4,6 @@ import abulfayz_sayidasqarov from "~/assets/team/abulfayz_sayidasqarov.png";
 import abulfayz_sayidasqarov_shadow from "~/assets/team/abulfayz_sayidasqarov_shadow.png";
 import murodjon_mahmudov from "~/assets/team/murodjon_mahmudov.png";
 import murodjon_mahmudov_shadow from "~/assets/team/murodjon_mahmudov_shadow.png";
-import adhamjon_saxodullayev from "~/assets/team/adhamjon_saxodullayev.png";
-import adhamjon_saxodullayev_shadow from "~/assets/team/adhamjon_saxodullayev_shadow.png";
 import dilnoza_yusupova from "~/assets/team/dilnoza_yusupova.png";
 import dilnoza_yusupova_shadow from "~/assets/team/dilnoza_yusupova_shadow.png";
 import ulugbek_oripov from "~/assets/team/ulugbek_oripov.png";
@@ -40,12 +38,6 @@ export default () => {
       position: t("staffs.murodjon.position"),
       image: murodjon_mahmudov,
       shadow: murodjon_mahmudov_shadow,
-    },
-    {
-      name: t("staffs.adhamjon.name"),
-      position: t("staffs.adhamjon.position"),
-      image: adhamjon_saxodullayev,
-      shadow: adhamjon_saxodullayev_shadow,
     },
     {
       name: t("staffs.dilnoza.name"),

@@ -79,7 +79,7 @@ const texts = computed(() => [
     id: 3,
     text: t("footer.info[2]", {
       name: `<a href="https://platina.uz/" target="_blank">Platina.uz</a>`,
-      phone: `<a href="tel:+998 97 022 01 10" target="_blank">+998 97 022 01 10</a>`,
+      phone: `<a href="tel:+998701195555" target="_blank">+998 70 119 55 55</a>`,
       telegram: `<a href="https://t.me/PlatinaPR" target="_blank">Platina PR</a>`,
       email: `<a href="mailto:info@platina.uz" target="_blank">info@platina.uz</a>`,
     }),

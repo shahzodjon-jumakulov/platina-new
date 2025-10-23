@@ -12,7 +12,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <NuxtLink
-            to="tel:+998701195555"
+            to="tel:+998881001155"
             class="px-4 py-3 flex items-center gap-3 bg-light-blue-100 dark:bg-white-100 hover:bg-light-blue-300 dark:hover:bg-white-200 transition-colors rounded-lg group"
           >
             <div
@@ -28,7 +28,7 @@
               <p
                 class="text-light-blue dark:text-light-blue-dark text-base font-bold"
               >
-                +998 70 119 55 55
+                +998 88 100 11 55
               </p>
             </div>
           </NuxtLink>

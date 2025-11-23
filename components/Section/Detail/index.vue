@@ -31,7 +31,7 @@ defineProps({
         </header>
 
         <section
-          class="p-4 md:px-5 rounded-xl border border-light-blue-400 dark:border-light-blue-dark-400 text-base md:text-lg !leading-[140%] font-medium text-black dark:text-white-600 short"
+          class="p-4 md:px-5 rounded-xl border border-light-blue-400 dark:border-light-blue-dark-400 text-lg !leading-[140%] font-medium text-black dark:text-white-600 short"
           v-html="data.short_content"
         ></section>
       </div>
@@ -74,7 +74,7 @@ defineProps({
 
       <section
         v-html="modifyContent(data.content)"
-        class="content text-base md:text-lg !leading-[140%] text-black dark:text-white-600"
+        class="content text-lg !leading-[140%] text-black dark:text-white-600"
       ></section>
 
       <section>

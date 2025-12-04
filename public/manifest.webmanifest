@@ -1,0 +1,13 @@
+{
+  "name": "Platina.uz",
+  "short_name": "Platina.uz",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone"
+}

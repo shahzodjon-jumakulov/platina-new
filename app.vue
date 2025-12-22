@@ -65,10 +65,26 @@ useHead({
       language: "JavaScript",
       innerHTML: `<!-- top_rat="&col=0063AF&t=ffffff&p=E6850F";top_r+="&js="+top_js+"";document.write('<img src="http://cnt0.www.uz/counter/collect?'+top_r+top_rat+'" width=0 height=0 border=0 alt="platina.uz" style="position: fixed; top:0; left:0; height: 0;">')//-->`,
     },
+    {
+      type: "text/javascript",
+      innerHTML:
+        `(function(m,e,t,r,i,k,a){` +
+        `m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};` +
+        `m[i].l=1*new Date();` +
+        `for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}` +
+        `k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)` +
+        `})(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105970426', 'ym');` +
+        `ym(105970426, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});`,
+    },
   ],
-  noscript: {
-    innerHTML: `<IMG height=0 src="http://cnt0.www.uz/counter/collect?id=47699&pg=http%3A//uzinfocom.uz&&col=0063AF&amp;t=ffffff&amp;p=E6850F" width=0 border=0 alt="platina.uz">`,
-  },
+  noscript: [
+    {
+      innerHTML: `<IMG height=0 src="http://cnt0.www.uz/counter/collect?id=47699&pg=http%3A//uzinfocom.uz&&col=0063AF&amp;t=ffffff&amp;p=E6850F" width=0 border=0 alt="platina.uz">`,
+    },
+    {
+      innerHTML: `<div><img src="https://mc.yandex.ru/watch/105970426" style="position:absolute; left:-9999px;" alt="" /></div>`,
+    },
+  ],
 });
 
 useSeoMeta({

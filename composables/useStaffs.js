@@ -16,8 +16,6 @@ import shahzodjon from "~/assets/team/shahzodjon.png";
 import shahzodjon_shadow from "~/assets/team/shahzodjon_shadow.png";
 import samandar from "~/assets/team/samandar.png";
 import samandar_shadow from "~/assets/team/samandar_shadow.png";
-import sevara from "~/assets/team/sevara.png";
-import sevara_shadow from "~/assets/team/sevara_shadow.png";
 
 export default () => {
   const { t } = useI18n();
@@ -52,12 +50,6 @@ export default () => {
       position: t("staffs.dilnoza.position"),
       image: dilnoza_yusupova,
       shadow: dilnoza_yusupova_shadow,
-    },
-    {
-      name: t("staffs.sevara.name"),
-      position: t("staffs.sevara.position"),
-      image: sevara,
-      shadow: sevara_shadow,
     },
     {
       name: t("staffs.ulugbek.name"),

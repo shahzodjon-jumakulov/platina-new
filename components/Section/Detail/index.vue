@@ -90,6 +90,8 @@ defineProps({
         </ul>
       </section>
     </article>
+
+    <SectionDetailTelegram />
   </div>
 </template>
 

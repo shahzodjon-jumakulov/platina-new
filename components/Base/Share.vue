@@ -35,15 +35,15 @@ const share = (social) => {
   let href;
   if (social === "tg") {
     href = `https://t.me/share/url?url=${encodeURIComponent(
-      url.value
+      url.value,
     )}&text=${encodeURIComponent(props.title)}`;
   } else if (social === "fb") {
     href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      url.value
+      url.value,
     )}`;
   } else if (social === "tw") {
     href = `https://x.com/intent/tweet?url=${encodeURIComponent(
-      url.value
+      url.value,
     )}&text=${encodeURIComponent(props.title)}`;
   }
   window.open(href, "_blank");
@@ -104,18 +104,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="px-3 py-4 rounded-xl bg-white dark:bg-white-100 flex flex-col gap-2 absolute left-[calc(100%+1.25rem)] top-0 max-lg:hidden"
-  >
-    <button
-      v-for="item in items"
-      :key="item.id"
-      @click="item.click()"
-      class="bg-light-blue-100 dark:bg-light-blue-dark-100 hover:bg-light-blue-300 dark:hover:bg-light-blue-dark-300 active:bg-light-blue-400 dark:active:bg-light-blue-dark-400 transition-colors rounded-md flex-center size-6 group"
-      :class="{ '!bg-[#2DA85B]/30': item.isCopy && copied }"
+  <div class="absolute left-[calc(100%+1.25rem)] top-0 h-full">
+    <div
+      class="px-3 py-4 rounded-xl bg-white dark:bg-white-100 flex flex-col gap-2 max-lg:hidden sticky top-[9rem]"
     >
-      <component :is="item.icon" />
-    </button>
+      <button
+        v-for="item in items"
+        :key="item.id"
+        @click="item.click()"
+        class="bg-light-blue-100 dark:bg-light-blue-dark-100 hover:bg-light-blue-300 dark:hover:bg-light-blue-dark-300 active:bg-light-blue-400 dark:active:bg-light-blue-dark-400 transition-colors rounded-md flex-center size-6 group"
+        :class="{ '!bg-[#2DA85B]/30': item.isCopy && copied }"
+      >
+        <component :is="item.icon" />
+      </button>
+    </div>
   </div>
   <div class="relative -my-2.5 z-10 lg:hidden" ref="dropdown">
     <button class="flex items-center gap-1.5 group" @click="isOpen = !isOpen">

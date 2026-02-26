@@ -181,7 +181,7 @@ useSchemaOrg(breadcrumbList);
         />
       </section>
 
-      <GroupBusiness transparent-bg />
+      <!-- <GroupBusiness transparent-bg /> -->
     </div>
   </UContainer>
 </template>

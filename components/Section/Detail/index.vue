@@ -74,7 +74,7 @@ defineProps({
 
       <section
         v-html="modifyContent(data.content)"
-        class="content text-base md:text-lg !leading-[140%] text-black dark:text-white-600"
+        class="content text-base md:text-lg !leading-[145%] text-black dark:text-white-600"
       ></section>
 
       <section>

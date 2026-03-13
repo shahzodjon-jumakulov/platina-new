@@ -63,6 +63,6 @@ await useMyFetch(`/news/similar/${data.value?.id}`, {
 
       <SectionDetailSimilar :news="similar" />
     </div>
-    <GroupBusiness transparent-bg />
+    <GroupBusiness />
   </UContainer>
 </template>

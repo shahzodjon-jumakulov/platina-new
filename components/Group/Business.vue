@@ -68,7 +68,7 @@ const updatePassedBullets = () => {
 <template>
   <section
     v-if="news.length"
-    :class="transparentBg ? 'md:p-0' : 'md:bg-white md:dark:bg-white-100'"
+    :class="transparentBg ? 'md:p-0' : 'md:bg-white md:dark:bg-white-100 shadow-lg'"
     class="max-md:bg-blue py-5 sm:px-5 rounded-2xl grid grid-cols-1 gap-4"
   >
     <div class="flex items-center justify-between max-sm:px-4">

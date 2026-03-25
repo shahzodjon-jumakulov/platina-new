@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="grid grid-cols-1 gap-4 md:bg-white md:dark:bg-white-100 py-5 sm:px-5 rounded-2xl shadow-lg" v-if="news.length">
+  <section class="grid grid-cols-1 gap-4" v-if="news.length">
     <div class="flex items-center justify-between max-sm:px-4">
       <div class="flex items-center gap-2.5">
         <IconHexagon class="h-2.5 md:h-3" />
@@ -21,14 +21,14 @@ defineProps({
     </div>
 
     <div
-      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-4 md:gap-y-5"
+      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-4 md:gap-y-5 "
     >
       <NuxtLinkLocale
         v-for="item in news.slice(0, 4)"
         :key="item.id"
         :to="useNewsUrl(item.publish, item.slug)"
         @click="storeSelected(item)"
-        class="group bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-xl max-md:p-4 "
+        class="group bg-white rounded-xl max-md:p-4 shadow-lg md:max-lg:[&:nth-child(n+4)]:hidden"
       >
         <article class="flex max-md:gap-3 md:flex-col">
           <BaseOverlayImg

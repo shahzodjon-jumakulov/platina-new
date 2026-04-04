@@ -28,7 +28,7 @@ defineProps({
         :key="item.id"
         :to="useNewsUrl(item.publish, item.slug)"
         @click="storeSelected(item)"
-        class="group bg-white rounded-xl max-md:p-4 shadow-lg md:max-lg:[&:nth-child(n+4)]:hidden"
+        class="group bg-white dark:bg-white-100 rounded-xl max-md:p-4 shadow-lg md:max-lg:[&:nth-child(n+4)]:hidden"
       >
         <article class="flex max-md:gap-3 md:flex-col">
           <BaseOverlayImg

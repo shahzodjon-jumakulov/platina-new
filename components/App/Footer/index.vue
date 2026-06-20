@@ -81,7 +81,7 @@ const texts = computed(() => [
       name: `<a href="https://platina.uz/" target="_blank">Platina.uz</a>`,
       phone: `<a href="tel:+998881001155" target="_blank">+998 88 100 11 55</a>`,
       telegram: `<a href="https://t.me/PlatinaPR" target="_blank">Platina PR</a>`,
-      email: `<a href="mailto:info@platina.uz" target="_blank">info@platina.uz</a>`,
+      email: `<a href="mailto:info@mediaaffairs.uz" target="_blank">info@mediaaffairs.uz</a>`,
     }),
   },
 ]);

@@ -4,14 +4,10 @@ import abulfayz_sayidasqarov from "~/assets/team/abulfayz_sayidasqarov.png";
 import abulfayz_sayidasqarov_shadow from "~/assets/team/abulfayz_sayidasqarov_shadow.png";
 import murodjon_mahmudov from "~/assets/team/murodjon_mahmudov.png";
 import murodjon_mahmudov_shadow from "~/assets/team/murodjon_mahmudov_shadow.png";
-import javhar_abdusattorov from "~/assets/team/javhar_abdusattorov.png";
-import javhar_abdusattorov_shadow from "~/assets/team/javhar_abdusattorov_shadow.png";
 import dilnoza_yusupova from "~/assets/team/dilnoza_yusupova.png";
 import dilnoza_yusupova_shadow from "~/assets/team/dilnoza_yusupova_shadow.png";
 import ulugbek_oripov from "~/assets/team/ulugbek_oripov.png";
 import ulugbek_oripov_shadow from "~/assets/team/ulugbek_oripov_shadow.png";
-import mirodil_ortiqov from "~/assets/team/mirodil_ortiqov.png";
-import mirodil_ortiqov_shadow from "~/assets/team/mirodil_ortiqov_shadow.png";
 import shahzodjon from "~/assets/team/shahzodjon.png";
 import shahzodjon_shadow from "~/assets/team/shahzodjon_shadow.png";
 import samandar from "~/assets/team/samandar.png";
@@ -40,12 +36,6 @@ export default () => {
       shadow: murodjon_mahmudov_shadow,
     },
     {
-      name: t("staffs.javhar.name"),
-      position: t("staffs.javhar.position"),
-      image: javhar_abdusattorov,
-      shadow: javhar_abdusattorov_shadow,
-    },
-    {
       name: t("staffs.dilnoza.name"),
       position: t("staffs.dilnoza.position"),
       image: dilnoza_yusupova,
@@ -56,12 +46,6 @@ export default () => {
       position: t("staffs.ulugbek.position"),
       image: ulugbek_oripov,
       shadow: ulugbek_oripov_shadow,
-    },
-    {
-      name: t("staffs.mirodil.name"),
-      position: t("staffs.mirodil.position"),
-      image: mirodil_ortiqov,
-      shadow: mirodil_ortiqov_shadow,
     },
     {
       name: t("staffs.shahzod.name"),

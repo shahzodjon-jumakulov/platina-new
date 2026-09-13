@@ -19,21 +19,35 @@ const { data } = await useMyFetch("/news/all/", {
 const { webpageSchema } = useSchemaProperties();
 
 useSchemaOrg(webpageSchema);
+
+// White ground for the home page only (see `body.main-page` in main.scss).
+useHead({ bodyAttrs: { class: "main-page" } });
 </script>
 
 <template>
-  <UContainer class="max-sm:pb-4">
-    <h1 class="sr-only">{{ $t("meta.title") }}</h1>
-    <div class="flex flex-col gap-5 sm:py-5">
+  <div class="flex flex-col gap-4 sm:gap-12 sm:py-12 max-sm:pb-4">
+    <UContainer>
+      <h1 class="sr-only">{{ $t("meta.title") }}</h1>
       <Hero />
-      <Articles class="max-md:hidden" />
-      <Interview />
-      <GroupCardSlider :title="news[0]?.category.name" to="/category/tahlil" :news="news" color="light" />
-      <Popular />
+    </UContainer>
+    <GroupTvSlider />
 
-      <GroupTvSlider />
-      
-      <GroupBusiness />
-    </div>
-  </UContainer>
+    <GroupCategoryGrid category="jamiyat" />
+    <GroupCategoryGrid category="siyosat" />
+    <GroupCategoryFeature category="maqola" />
+    <GroupCategoryGrid category="jahon" />
+    <GroupCategoryGrid category="iqtisod" />
+    <GroupCategoryFeature category="tahlil" />
+    <GroupCategoryGrid category="sport" />
+    <GroupCategoryGrid category="madaniyat" />
+
+    <!-- <Articles class="max-md:hidden" />
+    <Interview />
+    <GroupCardSlider :title="news[0]?.category.name" to="/category/tahlil" :news="news" color="light" />
+    <Popular /> -->
+
+    <UContainer>
+      <GroupBusiness transparent-bg />
+    </UContainer>
+  </div>
 </template>

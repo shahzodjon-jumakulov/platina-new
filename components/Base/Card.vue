@@ -12,6 +12,16 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  accent: {
+    type: Boolean,
+    default: false,
+  },
+  // Surface classes for the section shell. Overridden by sections that sit on
+  // a tinted ground (Figma: the "Мақола"/"Таҳлил" blocks).
+  surface: {
+    type: String,
+    default: "bg-white dark:bg-white-100",
+  },
 });
 </script>
 
@@ -19,13 +29,23 @@ defineProps({
   <section
     :class="[
       transparent ? 'bg-transparent md:!p-0 md:!bg-transparent' : '',
-      'rounded-2xl grid grid-cols-1 gap-4 py-5 sm:px-5 bg-white dark:bg-white-100',
+      surface,
+      'rounded-2xl grid grid-cols-1 content-start gap-4 py-5 sm:px-5',
     ]"
   >
-    <div class="flex items-center justify-between max-sm:px-4">
+    <div
+      :class="[
+        accent
+          ? 'border-t-4 border-light-blue dark:border-light-blue-dark pt-4'
+          : '',
+        // Margin rather than padding so the accent rule is inset too, as in Figma.
+        'flex items-center justify-between max-sm:mx-4',
+      ]"
+    >
       <div class="flex items-center gap-2.5">
         <IconHexagon class="h-2.5 md:h-3" />
         <h2
+          :class="accent ? 'uppercase' : ''"
           class="text-lg md:text-xl font-bold text-blue dark:text-white-600 !leading-[normal]"
         >
           {{ title }}

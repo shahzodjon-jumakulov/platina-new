@@ -4,17 +4,17 @@ const news = loadedPinnedNews();
 
 if (
   news.value.lang !== locale.value ||
-  news.value.news.length < 7 ||
+  news.value.news.length < 4 ||
   news.value.time < Date.now() - 1000 * 60 * 5
 ) {
   const { data } = await useMyFetch("/news/all/", {
-    params: { is_pinned: true, limit: 7 },
+    params: { is_pinned: true, limit: 4 },
     transform: (data) => data.results,
   });
   news.value = { lang: locale.value, news: data.value, time: Date.now() };
 }
 const pinned = ref(news.value.news[0] || null);
-const remaining = ref(news.value.news.slice(1, 7) || []);
+const remaining = ref(news.value.news.slice(1, 4) || []);
 
 const { generateItemList } = useSchemaProperties();
 const schemaNodes = generateItemList(news.value.news, t("pinned_news"));
@@ -38,7 +38,7 @@ useSchemaOrg(schemaNodes);
             {{ pinned.title }}
           </h3>
           <div
-            class="short-content text-sm md:text-base lg:line-clamp-5"
+            class="short-content text-sm md:text-base md:line-clamp-5"
             v-html="pinned.short_content"
           ></div>
         </div>
@@ -70,7 +70,7 @@ useSchemaOrg(schemaNodes);
             <div class="flex flex-col gap-2 md:gap-1.5">
               <BaseMeta :category="item.category.name" :date="item.publish" />
               <h3
-                class="title text-sm md:text-base line-clamp-3"
+                class="title text-sm md:text-base line-clamp-4"
                 v-hover-transition
               >
                 {{ item.title }}

@@ -2,7 +2,8 @@
 const route = useRoute();
 const { t } = useI18n();
 const { posts } = route.params;
-const title = posts === "popular" ? t("popular_news") : t("latest");
+const titles = { popular: "popular_news", pinned: "pinned_news" };
+const title = t(titles[posts] || "latest");
 useSeoMeta({
   title: `${title} | Platina.uz`,
   ogTitle: `${title} | Platina.uz`,
@@ -11,7 +12,7 @@ useSeoMeta({
 
 const endpoint = posts === "popular" ? "/news/popular" : "/news/all";
 const { data } = await useMyFetch(endpoint, {
-  params: { limit: 12 },
+  params: { limit: 12, ...(posts === "pinned" && { is_pinned: true }) },
 });
 const count = ref(data.value?.count || 0);
 const next = ref(data.value?.next || null);

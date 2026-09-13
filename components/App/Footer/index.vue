@@ -90,7 +90,7 @@ const texts = computed(() => [
 <template>
   <AppFooterNav />
 
-  <footer class="bg-white dark:bg-white-100 max-md:hidden">
+  <footer class="bg-white dark:bg-white-100 max-md:hidden border-t border-light-blue-100">
     <UContainer class="py-7">
       <div class="flex flex-col gap-5">
         <div class="flex items-center justify-between gap-5 flex-wrap">

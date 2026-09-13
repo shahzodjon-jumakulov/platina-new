@@ -12,6 +12,17 @@ body {
   }
 }
 
+// The home page has its own ground in both themes (Figma: `desktop-main f` /
+// `desktop-dark-main f`); every other route keeps #f5f9fd / dark-blue.
+// Set by `bodyAttrs` in pages/index.vue, so it is removed on navigation away.
+body.main-page {
+  background: #ffffff;
+
+  .dark & {
+    background: #13142d;
+  }
+}
+
 ::-moz-selection {
   background: #06c !important;
   color: #fff;

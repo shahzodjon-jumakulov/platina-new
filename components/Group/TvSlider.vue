@@ -41,27 +41,31 @@ const { data } = await useMyFetch("/news/video/shorts/", {
 </script>
 
 <template>
-  <section
-    v-if="data?.length"
-    class="bg-white dark:bg-white-200 rounded-2xl p-4 md:p-5 flex flex-col gap-4"
-  >
-    <div class="flex justify-between items-center">
-      <IconPlatinatv class="max-md:h-8" />
-      <div class="flex gap-2">
-        <IconTvArrow class="swiper-tv-prev" />
-        <IconTvArrow right class="swiper-tv-next" />
+  <!-- Full-bleed band (Figma 748:44442 spans x=0 w=1920 while its content stays
+       on the 1216 grid), so the background is edge-to-edge and square-cornered
+       while UContainer keeps the content aligned with every other section. -->
+  <section v-if="data?.length" class="bg-blue dark:bg-white-100 py-4 md:py-10">
+    <UContainer>
+      <div class="flex flex-col gap-4 max-md:px-4">
+        <div class="flex justify-between items-center">
+          <IconPlatinatv class="max-md:h-8" />
+          <div class="flex gap-2">
+            <IconTvArrow class="swiper-tv-prev" />
+            <IconTvArrow right class="swiper-tv-next" />
+          </div>
+        </div>
+
+        <div class="space-y-5 -mx-4 md:-mx-5">
+          <Swiper v-bind="options" class="!px-4 md:!px-5">
+            <SwiperSlide v-for="item in data" :key="item.id" class="!h-auto">
+              <CardShorts :video="item" />
+            </SwiperSlide>
+          </Swiper>
+
+          <div class="pagination pagination-tv flex gap-2 justify-center"></div>
+        </div>
       </div>
-    </div>
-
-    <div class="space-y-5 -mx-4 sm:-mx-5">
-      <Swiper v-bind="options" class="!px-4 md:!px-5">
-        <SwiperSlide v-for="item in data" :key="item.id" class="!h-auto">
-          <CardShorts :video="item" />
-        </SwiperSlide>
-      </Swiper>
-
-      <div class="pagination pagination-tv flex gap-2 justify-center"></div>
-    </div>
+    </UContainer>
   </section>
 </template>
 

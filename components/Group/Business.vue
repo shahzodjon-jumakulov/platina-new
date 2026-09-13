@@ -69,13 +69,13 @@ const updatePassedBullets = () => {
   <section
     v-if="news.length"
     :class="transparentBg ? 'md:p-0' : 'md:bg-white md:dark:bg-white-100 shadow-lg'"
-    class="max-md:bg-blue py-5 sm:px-5 rounded-2xl grid grid-cols-1 gap-4"
+    class="max-md:bg-blue pb-5 sm:px-5 rounded-2xl grid grid-cols-1 gap-4"
   >
-    <div class="flex items-center justify-between max-sm:px-4">
+    <div class="flex items-center justify-between max-sm:px-4 sm:border-t-4 border-light-blue dark:border-light-blue-dark pt-4">
       <div class="flex items-center gap-2.5">
         <IconHexagon dark class="h-2.5 md:h-3" />
         <h2
-          class="text-lg md:text-xl font-bold text-white md:text-blue dark:text-white-600 !leading-[normal]"
+          class="text-lg md:text-xl font-bold text-white md:text-blue dark:text-white-600 !leading-[normal] uppercase"
         >
           {{ $t("business") }}
         </h2>
@@ -83,12 +83,12 @@ const updatePassedBullets = () => {
 
       <NuxtLinkLocale to="/category/biznes" class="all-link group">
         <span
-          class="text-xs leading-normal font-medium text-black dark:text-white-600 px-1"
+          class="text-xs leading-normal font-medium text-white-600 dark:text-white-600 px-1"
           :class="{'max-md:!text-white-600': !transparentBg}"
         >
           {{ $t("all") }}
         </span>
-        <IconArrowRight :dark="!transparentBg" />
+        <IconArrowRight :dark="transparentBg" />
       </NuxtLinkLocale>
     </div>
 

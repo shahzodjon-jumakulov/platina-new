@@ -52,7 +52,7 @@ export default defineAppConfig({
         primary: {
           solid:
             "bg-light-blue hover:bg-[#005CB8] active:bg-[#0058AF] text-white",
-          soft: "bg-light-blue-100 dark:light-blue-dark-100 hover:bg-light-blue-200 active:bg-light-blue-300 focus-visible:bg-light-blue-300 text-light-blue",
+          soft: "bg-light-blue-100 dark:bg-light-blue-dark-100 hover:bg-light-blue-200 dark:hover:bg-light-blue-dark-200 active:bg-light-blue-300 focus-visible:bg-light-blue-300 text-light-blue dark:text-light-blue-dark",
         },
       },
     },

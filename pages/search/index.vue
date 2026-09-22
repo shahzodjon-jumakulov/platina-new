@@ -2,6 +2,10 @@
 const route = useRoute();
 const { q, popular } = route.query;
 const term = ref(q ? decodeURIComponent(q) : null);
+
+// Internal search results are near-duplicate, infinitely variable pages —
+// crawl the links, index none of them.
+useSeoMeta({ robots: "noindex, follow" });
 const activeTab = ref(popular ? 1 : 0);
 const tabs = [
   {

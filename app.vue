@@ -9,6 +9,7 @@
 <script setup>
 const { t, locale } = useI18n();
 const colorMode = useColorMode();
+const route = useRoute();
 
 onMounted(() => {
   setMomentLocale(locale.value);
@@ -34,36 +35,57 @@ const themeColor = computed(() => {
   return colorMode.value === "dark" ? "#13142D" : "#ffffff";
 });
 
+// Self-referencing canonical + reciprocal hreflang for every page. Applied here
+// rather than per-page so category, tag and static pages stop declaring
+// themselves duplicates of the home page.
+const { relAlternate } = useRelAlternate(
+  () => route.path,
+  {
+    // Keep ?page=N on the canonical so paginated archives stay indexable.
+    suffix: () => {
+      const page = Number(route.query.page);
+      return page > 1 ? `?page=${page}` : "";
+    },
+  }
+);
+
+// Computed so the canonical follows client-side navigation instead of freezing
+// on whichever page was server-rendered first.
+const links = computed(() => [
+  { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+  // The API and every article image are served from this origin.
+  { rel: "preconnect", href: "https://cp.platina.uz", crossorigin: "" },
+  { rel: "dns-prefetch", href: "https://cp.platina.uz" },
+  {
+    rel: "alternate",
+    type: "application/rss+xml",
+    title: "Platina.uz",
+    href: "https://platina.uz/rss.xml",
+  },
+  ...relAlternate.value,
+]);
+
 useHead({
   htmlAttrs: { lang: lang },
-  link: [
-    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-    { rel: "canonical", href: "https://platina.uz" },
-    { rel: "alternate", href: "https://platina.uz", hreflang: "x-default" },
-    { rel: "alternate", href: "https://platina.uz/uz", hreflang: "uz-Cyrl" },
-    { rel: "alternate", href: "https://platina.uz/o'z", hreflang: "uz-Latn" },
-  ],
+  link: links,
   meta: [{ name: "theme-color", content: themeColor }],
   script: [
     {
-      language: "javascript",
-      innerHTML: `<!-- top_js="1.0";top_r="id=47699&r="+escape(document.referrer)+"&pg="+escape(window.location.href);document.cookie="smart_top=1; path=/"; top_r+="&c="+(document.cookie?"Y":"N") //-->`,
-    },
-    {
-      language: "javascript1.1",
-      innerHTML: `<!-- top_js="1.1";top_r+="&j="+(navigator.javaEnabled()?"Y":"N") //-->`,
-    },
-    {
-      language: "javascript1.2",
-      innerHTML: `<!-- top_js="1.2";top_r+="&wh="+screen.width+'x'+screen.height+"&px="+ (((navigator.appName.substring(0,3)=="Mic"))?screen.colorDepth:screen.pixelDepth) //-->`,
-    },
-    {
-      language: "javascript1.3",
-      innerHTML: `<!-- top_js="1.3"; //-->`,
-    },
-    {
-      language: "JavaScript",
-      innerHTML: `<!-- top_rat="&col=0063AF&t=ffffff&p=E6850F";top_r+="&js="+top_js+"";document.write('<img src="http://cnt0.www.uz/counter/collect?'+top_r+top_rat+'" width=0 height=0 border=0 alt="platina.uz" style="position: fixed; top:0; left:0; height: 0;">')//-->`,
+      // www.uz national counter. Rewritten from the five legacy
+      // `document.write` blocks, which blocked the parser and requested an
+      // http:// image from an https:// page (browsers blocked it outright).
+      type: "text/javascript",
+      tagPosition: "bodyClose",
+      innerHTML:
+        `(function(){try{` +
+        `var r="id=47699&r="+encodeURIComponent(document.referrer)+"&pg="+encodeURIComponent(location.href);` +
+        `document.cookie="smart_top=1; path=/";` +
+        `r+="&c="+(document.cookie?"Y":"N");` +
+        `r+="&j="+(navigator.javaEnabled&&navigator.javaEnabled()?"Y":"N");` +
+        `r+="&wh="+screen.width+"x"+screen.height+"&px="+(screen.colorDepth||screen.pixelDepth);` +
+        `r+="&js=1.3";` +
+        `new Image().src="https://cnt0.www.uz/counter/collect?"+r+"&col=0063AF&t=ffffff&p=E6850F";` +
+        `}catch(e){}})();`,
     },
     {
       type: "text/javascript",
@@ -79,7 +101,7 @@ useHead({
   ],
   noscript: [
     {
-      innerHTML: `<IMG height=0 src="http://cnt0.www.uz/counter/collect?id=47699&pg=http%3A//uzinfocom.uz&&col=0063AF&amp;t=ffffff&amp;p=E6850F" width=0 border=0 alt="platina.uz">`,
+      innerHTML: `<img height="0" width="0" border="0" alt="platina.uz" src="https://cnt0.www.uz/counter/collect?id=47699&amp;pg=https%3A//platina.uz&amp;col=0063AF&amp;t=ffffff&amp;p=E6850F">`,
     },
     {
       innerHTML: `<div><img src="https://mc.yandex.ru/watch/105970426" style="position:absolute; left:-9999px;" alt="" /></div>`,

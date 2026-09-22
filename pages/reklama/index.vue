@@ -1,5 +1,14 @@
 <script setup>
-//
+const { t } = useI18n();
+
+// Without its own title this page inherited the generic home page metadata.
+const title = computed(() => `${t("footer.reklama")} | Platina.uz`);
+useSeoMeta({
+  title: () => title.value,
+  description: () => t("reklama.phone"),
+  ogTitle: () => title.value,
+  ogDescription: () => t("reklama.phone"),
+});
 </script>
 
 <template>

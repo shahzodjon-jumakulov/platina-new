@@ -10,13 +10,20 @@ export default () => {
     return map[locale.value] || "uz-Latn";
   });
 
+  // Google rejects SVG for publisher.logo — it requires a raster image of at
+  // least 112x112. An SVG here invalidated the whole Organization block.
+  const schemaLogo = {
+    "@type": "ImageObject",
+    url: "https://platina.uz/icon-192x192.png",
+    width: 192,
+    height: 192,
+  };
+
   const schemaPublisher = {
-    "@type": "Organization",
+    "@type": "NewsMediaOrganization",
     name: "Platina.uz",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://platina.uz/favicon.svg",
-    },
+    url: "https://platina.uz",
+    logo: schemaLogo,
   };
 
   const websiteSchema = computed(() => ({
@@ -25,14 +32,7 @@ export default () => {
     name: "Platina.uz",
     url: "https://platina.uz",
     inLanguage: schemaLanguage.value,
-    publisher: {
-      "@type": "Organization",
-      name: "Platina.uz",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://platina.uz/favicon.svg",
-      },
-    },
+    publisher: schemaPublisher,
     potentialAction: {
       "@type": "SearchAction",
       target: "https://platina.uz/search?q={search_term_string}",
@@ -59,6 +59,15 @@ export default () => {
       "@id": useNewsUrl(article.publish, article.slug, locale.value),
       headline: article.title,
       datePublished: article.publish + "+05:00",
+      // `author` is required by Google's article structured-data spec; without
+      // it the markup is ineligible for article rich results. The API exposes
+      // no per-article byline yet, so the newsroom stands in until it does.
+      author: {
+        "@type": "Organization",
+        name: "Platina.uz",
+        url: "https://platina.uz/our-team",
+      },
+      dateModified: (article.updated || article.publish) + "+05:00",
       publisher: schemaPublisher,
       image: article.image_large,
       description: htmlToText(article.short_content),
@@ -75,9 +84,10 @@ export default () => {
 
   const generateItemList = (newsItems, name) => {
     return {
+      "@context": "https://schema.org",
       "@type": "ItemList",
       name: name,
-      numberOfItems: 7,
+      numberOfItems: newsItems.length,
       itemListElement: newsItems.map((article, index) => ({
         "@type": "ListItem",
         position: index + 1,

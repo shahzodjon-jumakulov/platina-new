@@ -1,6 +1,23 @@
 <script setup>
+const { t } = useI18n();
 const { data } = await useMyFetch("/pages/about/");
 const ogImage = data.value.image;
+
+// Without its own title this page inherited the generic home page metadata.
+const title = computed(
+  () => `${data.value?.name || t("footer.about")} | Platina.uz`
+);
+const description = computed(() => {
+  const text = htmlToText(data.value?.short_content || data.value?.content);
+  return text ? text.trim().slice(0, 300) : t("meta.desc");
+});
+
+useSeoMeta({
+  title: () => title.value,
+  description: () => description.value,
+  ogTitle: () => title.value,
+  ogDescription: () => description.value,
+});
 </script>
 
 <template>

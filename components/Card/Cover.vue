@@ -21,6 +21,8 @@ const localDate = computed(() => $moment(props.article.publish).local());
       <img
         :src="article.image_large || article.image_medium"
         :alt="article.image_name?.length ? article.image_name : article.title"
+        loading="lazy"
+        decoding="async"
         class="w-full aspect-[3/2] object-cover select-none"
       />
 

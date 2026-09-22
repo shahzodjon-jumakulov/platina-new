@@ -47,6 +47,7 @@ useSchemaOrg(schemaNodes);
           class="md:w-1/2 lg:w-[25.5rem] md:self-center shrink-0 rounded-lg"
           :src="pinned.image_large"
           :data="pinned"
+          eager
         />
       </article>
     </NuxtLinkLocale>

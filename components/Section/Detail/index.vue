@@ -62,6 +62,10 @@ defineProps({
         <img
           :src="data.image_large"
           :alt="data.image_name || data.title"
+          width="1200"
+          height="800"
+          fetchpriority="high"
+          decoding="async"
           class="rounded-2xl w-full aspect-[3/2]"
         />
         <figcaption
@@ -73,7 +77,7 @@ defineProps({
       </figure>
 
       <section
-        v-html="modifyContent(data.content)"
+        v-html="modifyContent(data.content, data.title)"
         class="content text-base md:text-lg !leading-[145%] text-black dark:text-white-600"
       ></section>
 

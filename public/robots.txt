@@ -1,1 +1,9 @@
+User-agent: *
+Allow: /
 
+# Internal search produces unlimited near-duplicate URLs.
+# Everything else, including /_nuxt/ assets, must stay crawlable so Google
+# can render and evaluate the pages.
+Disallow: /search
+
+Sitemap: https://platina.uz/sitemap.xml

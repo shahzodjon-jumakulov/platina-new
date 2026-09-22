@@ -12,6 +12,12 @@ defineProps({
     type: String,
     default: "",
   },
+  // Set on the one above-the-fold image per page (the LCP candidate); every
+  // other card image loads lazily.
+  eager: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -21,6 +27,9 @@ defineProps({
       :src="src"
       :alt="data.image_name?.length ? data.image_name : data.title"
       :class="imgClass"
+      :loading="eager ? 'eager' : 'lazy'"
+      :fetchpriority="eager ? 'high' : 'auto'"
+      decoding="async"
       class="size-full aspect-[3/2] object-cover select-none"
     />
     <div

@@ -9,10 +9,21 @@ const { locale, t } = useI18n();
 const { slug } = route.params;
 const selectedNews = useSelectedNews();
 
-const { data } = await useMyFetch(`/news/${slug}`, {
+const { data, error } = await useMyFetch(`/news/${slug}`, {
   default: () => selectedNews.value || {},
   key: `news-${locale}-${slug}`,
 });
+
+// Without this an unknown slug threw on `data.value.tags.join(...)` below and
+// Nuxt answered 500. Googlebot reads a 500 as "server is broken" and throttles
+// crawling of the whole domain; a 404 just retires the URL.
+if (error.value || !data.value?.id) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Article not found",
+    fatal: true,
+  });
+}
 
 useSeoMeta({
   title: data.value.title || $t("meta.title"),
@@ -33,27 +44,25 @@ useSeoMeta({
   twitterImage: data.value.image_large,
 });
 
-const { relAlternate } = useRelAlternate(route.path);
-useHead({
-  link: relAlternate,
-});
+// Canonical + hreflang are set globally in app.vue from the current route.
 
 const { generateNewsArticle, generateBreadcrumbList } = useSchemaProperties();
 const breadcrumbList = generateBreadcrumbList(data.value.category, data.value);
 const schemaNodes = generateNewsArticle(data.value);
 useSchemaOrg([schemaNodes, breadcrumbList]);
 
-const similar = ref([]);
-await useMyFetch(`/news/similar/${data.value?.id}`, {
-  params: { limit: 4 },
-  server: false,
-  lazy: true,
-  onResponse({ response }) {
-    if (response._data?.similar?.length) {
-      similar.value = response._data.similar.slice(0, 4);
-    }
-  },
-});
+// Rendered on the server: this is the only thing linking one article to
+// another, and with `server: false` an article page shipped zero outbound
+// article links, making every story a crawl dead end.
+const { data: similarData } = await useMyFetch(
+  `/news/similar/${data.value.id}`,
+  {
+    params: { limit: 4 },
+    key: `similar-${locale}-${data.value.id}`,
+    default: () => ({ similar: [] }),
+  }
+);
+const similar = computed(() => (similarData.value?.similar || []).slice(0, 4));
 </script>
 
 <template>

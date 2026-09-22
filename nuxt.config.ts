@@ -23,6 +23,13 @@ export default defineNuxtConfig({
     },
   },
 
+  // NOTE: HTML route caching (swr/isr) is deliberately NOT enabled here.
+  // @nuxtjs/i18n sets `Set-Cookie: i18n_redirected=<locale>` on every SSR
+  // response, so a cached page would replay one visitor's locale cookie to
+  // everyone who hits the cache. Caching needs to happen at nginx with that
+  // header stripped (or with `proxy_ignore_headers Set-Cookie`) before it is
+  // safe to turn on. The sitemap/RSS routes cache themselves instead.
+
   experimental: {
     viewTransition: true,
   },

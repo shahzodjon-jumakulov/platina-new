@@ -1,5 +1,5 @@
-import bobur_jalolov from "~/assets/team/bobur_jalolov.png";
-import bobur_jalolov_shadow from "~/assets/team/bobur_jalolov_shadow.png";
+import farida from "~/assets/team/farida.png";
+import farida_shadow from "~/assets/team/farida_shadow.png";
 import abulfayz_sayidasqarov from "~/assets/team/abulfayz_sayidasqarov.png";
 import abulfayz_sayidasqarov_shadow from "~/assets/team/abulfayz_sayidasqarov_shadow.png";
 import murodjon_mahmudov from "~/assets/team/murodjon_mahmudov.png";
@@ -18,10 +18,10 @@ export default () => {
 
   const staffs = [
     {
-      name: t("staffs.bobur.name"),
-      position: t("staffs.bobur.position"),
-      image: bobur_jalolov,
-      shadow: bobur_jalolov_shadow,
+      name: t("staffs.farida.name"),
+      position: t("staffs.farida.position"),
+      image: farida,
+      shadow: farida_shadow,
     },
     {
       name: t("staffs.abulfayz.name"),

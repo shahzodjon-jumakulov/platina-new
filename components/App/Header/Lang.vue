@@ -8,7 +8,9 @@ watch(locale, () => {
 </script>
 
 <template>
-  <UPopover v-model:open="open">
+  <!-- "absolute": the header's backdrop-filter makes it the containing block
+       for fixed elements, so a fixed popover is offset by the ad above it -->
+  <UPopover v-model:open="open" :popper="{ strategy: 'absolute' }">
     <button class="px-2 py-3 flex items-center group">
       <span
         class="px-1 text-sm font-medium text-black dark:text-white group-hover:text-light-blue dark:group-hover:text-light-blue-dark"

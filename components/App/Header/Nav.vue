@@ -75,18 +75,23 @@ onBeforeUnmount(() => {
       ></div>
     </div>
 
-    <NuxtLink
-      to="https://t.me/platinauzb"
-      target="_blank"
-      class="telegram-link"
-    >
-      <img
-        src="~/assets/icons/telegram-sm-white.svg"
-        alt="telegram"
-        class="size-5"
-      />
-      <span class="text-sm font-medium text-white">platinauzb</span>
-    </NuxtLink>
+    <div class="flex items-end gap-[13px]">
+      <AppHeaderTcmBanner class="max-xl:hidden" />
+
+      <!-- Temporarily hidden while the TCM banner is shown -->
+      <!-- <NuxtLink
+        to="https://t.me/platinauzb"
+        target="_blank"
+        class="telegram-link"
+      >
+        <img
+          src="~/assets/icons/telegram-sm-white.svg"
+          alt="telegram"
+          class="size-5"
+        />
+        <span class="text-sm font-medium text-white">platinauzb</span>
+      </NuxtLink> -->
+    </div>
   </div>
 </template>
 

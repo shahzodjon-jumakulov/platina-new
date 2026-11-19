@@ -18,10 +18,21 @@ export default (path, options = {}) => {
   const { locale } = useI18n();
   const route = useRoute();
 
+  // Hrefs must be valid URLs: a tag like "Пиримқул Қодиров" was emitted with
+  // a raw space and Cyrillic. Decode first so already-encoded paths aren't
+  // double-encoded; encodeURI keeps the apostrophe in /o'z as is.
+  const encode = (url) => {
+    try {
+      return encodeURI(decodeURI(url));
+    } catch {
+      return encodeURI(url);
+    }
+  };
+
   const resolve = (loc) => {
     const target = typeof path === "function" ? path() : path || route.path;
     const suffix = options.suffix ? options.suffix() : "";
-    return BASE + localePath(target, loc) + suffix;
+    return encode(BASE + localePath(target, loc) + suffix);
   };
 
   const relAlternate = computed(() => [

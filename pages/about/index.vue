@@ -1,6 +1,7 @@
 <script setup>
 const { t } = useI18n();
-const { data } = await useMyFetch("/pages/about/");
+const { data, error } = await useMyFetch("/pages/about/");
+if (error.value || !data.value) throwApiError(error.value);
 const ogImage = data.value.image;
 
 // Without its own title this page inherited the generic home page metadata.

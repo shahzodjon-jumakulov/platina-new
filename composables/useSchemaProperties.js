@@ -54,11 +54,27 @@ export default () => {
   }));
 
   const generateNewsArticle = (article) => {
+    const url = useNewsUrl(article.publish, article.slug, locale.value);
+    // Full-resolution original when the CMS provides it (new `image_original`
+    // field); image_large is 820×546.
+    const imageUrl = article.image_original || article.image_large;
+    const image = imageUrl
+      ? {
+          "@type": "ImageObject",
+          // Unique per article: without an @id every article's image was
+          // merged into one site-wide node (#/schema/image/1).
+          "@id": `${url}#primaryimage`,
+          url: imageUrl,
+          contentUrl: imageUrl,
+          ...(article.image_original ? {} : { width: 820, height: 546 }),
+        }
+      : undefined;
+
     return {
       "@type": "NewsArticle",
-      "@id": useNewsUrl(article.publish, article.slug, locale.value),
+      "@id": url,
       headline: article.title,
-      datePublished: article.publish + "+05:00",
+      datePublished: toTashkentIso(article.publish),
       // `author` is required by Google's article structured-data spec; without
       // it the markup is ineligible for article rich results. The API exposes
       // no per-article byline yet, so the newsroom stands in until it does.
@@ -67,17 +83,19 @@ export default () => {
         name: "Platina.uz",
         url: "https://platina.uz/our-team",
       },
-      dateModified: (article.updated || article.publish) + "+05:00",
+      dateModified: toTashkentIso(
+        article.modified || article.updated || article.publish
+      ),
       publisher: schemaPublisher,
-      image: article.image_large,
+      image,
       description: htmlToText(article.short_content),
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": useNewsUrl(article.publish, article.slug, locale.value),
+        "@id": url,
       },
       inLanguage: schemaLanguage.value,
-      keywords: article.tags.join(", "),
-      genre: article.category.name,
+      keywords: (article.tags || []).join(", "),
+      genre: article.category?.name,
       isAccessibleForFree: true,
     };
   };

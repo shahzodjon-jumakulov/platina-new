@@ -1,6 +1,11 @@
 <script setup>
+const props = defineProps({ error: { type: Object, default: null } });
 const { t } = useI18n();
 const localePath = useLocalePath();
+
+// 5xx (CMS down or timing out, see composables/throwApiError.js) is not a
+// missing page: say so instead of showing the 404 artwork.
+const unavailable = computed(() => (props.error?.statusCode || 0) >= 500);
 
 const handleError = () => clearError({ redirect: localePath("/") });
 </script>
@@ -13,7 +18,7 @@ const handleError = () => clearError({ redirect: localePath("/") });
     <main class="grow flex items-center">
       <UContainer class="grid gap-7 py-8">
         <section class="flex flex-col gap-2 lg:gap-4 items-center">
-          <div class="flex gap-1 lg:gap-2.5">
+          <div v-if="!unavailable" class="flex gap-1 lg:gap-2.5">
             <img
               src="~/assets/icons/error-4.svg"
               alt="404 error"
@@ -32,7 +37,7 @@ const handleError = () => clearError({ redirect: localePath("/") });
           </div>
           <div class="flex flex-col gap-1 lg:gap-2.5 items-center">
             <h1 class="text-xl lg:text-[2rem] font-semibold text-blue dark:text-white">
-              {{ t("error.title") }}
+              {{ unavailable ? t("error.unavailable") : t("error.title") }}
             </h1>
             <div class="flex-y-center flex-col">
               <button @click="handleError" class="flex items-center gap-1.5 group">

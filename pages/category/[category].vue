@@ -14,11 +14,7 @@ const page = computed(() => Math.max(1, Number(route.query.page) || 1));
 // Awaited during setup so the metadata below resolves in the SSR pass. It used
 // to be assigned inside watch(categories, ...), which never fires on the
 // server — so every category page shipped the generic home page title.
-const { data: categoryList } = await useMyFetch("/categories/list", {
-  key: `categories-${locale.value}`,
-  transform: (data) => data.results,
-  default: () => [],
-});
+const { data: categoryList, error: categoryError } = await useCategoryList();
 const cat = computed(
   () => categoryList.value?.find((item) => item.slug === category.value) || {}
 );
@@ -30,25 +26,31 @@ const loading = ref(false);
 const tempNews = ref([]);
 const tempNext = ref(null);
 
+let newsError = null;
 if (category.value === "platina-tv") {
-  const { data } = await useMyFetch("/news/video/shorts/", {
+  const { data, error } = await useMyFetch("/news/video/shorts/", {
     params: { limit: 15, offset: (page.value - 1) * 15 },
   });
+  newsError = error.value;
   news.value = data.value?.results || [];
   total.value = data.value?.count || 0;
   next.value = data.value?.next || null;
 } else {
-  const { data } = await useMyFetch("/news/all/", {
+  const { data, error } = await useMyFetch("/news/all/", {
     params: {
       categories: category,
       limit: PER_PAGE,
       offset: (page.value - 1) * PER_PAGE,
     },
   });
+  newsError = error.value;
   news.value = data.value?.results || [];
   total.value = data.value?.count || 0;
   next.value = data.value?.next || null;
 }
+
+// A CMS failure is a 503, never a 404: a 404 tells Google the page is gone.
+if (newsError) throwApiError(newsError);
 
 // Empty pages must be real 404s, not 200s with nothing on them ("soft 404s"),
 // which Google treats as low-quality duplicates. Two cases: a ?page= past the
@@ -58,23 +60,15 @@ const unknownCategory =
   categoryList.value?.length > 0 &&
   !cat.value?.slug;
 
-if (!news.value.length && (page.value > 1 || unknownCategory)) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Page not found",
-    fatal: true,
-  });
+if (!news.value.length) {
+  if (page.value > 1 || unknownCategory) throwApiError(null);
+  // Can't tell whether the category exists while its list is unavailable.
+  if (categoryError.value) throwApiError(categoryError.value);
 }
 
 const totalPages = computed(() =>
   Math.max(1, Math.ceil(total.value / (category.value === "platina-tv" ? 15 : PER_PAGE)))
 );
-const hasPrev = computed(() => page.value > 1);
-const hasNext = computed(() => page.value < totalPages.value);
-const pageQuery = (n) => ({
-  path: `/category/${category.value}`,
-  query: n > 1 ? { page: n } : {},
-});
 
 const pageTitle = computed(() => {
   // platina-tv is a front-end-only section; the CMS category list doesn't
@@ -95,10 +89,7 @@ useSeoMeta({
   twitterDescription: () => cat.value?.description || t("meta.desc"),
   ogImage: () => cat.value?.image,
   twitterImage: () => cat.value?.image,
-  ogUrl: () =>
-    "https://platina.uz/category/" +
-    category.value +
-    (page.value > 1 ? `?page=${page.value}` : ""),
+  // og:url comes from app.vue (= the canonical, with the locale prefix).
 });
 
 const loadMore = async () => {
@@ -242,39 +233,12 @@ useSchemaOrg(
           :loading="loading"
         />
 
-        <!--
-          Real <a href> pagination, rendered server-side. The "load more" button
-          above is the primary UX, but crawlers don't click buttons — without
-          these links everything past the first page of every category was
-          unreachable.
-        -->
-        <nav
-          v-if="totalPages > 1"
-          class="col-span-full flex items-center justify-center gap-4 text-sm"
-          :aria-label="$t('meta.category_news')"
-        >
-          <NuxtLinkLocale
-            v-if="hasPrev"
-            :to="pageQuery(page - 1)"
-            rel="prev"
-            class="px-3 py-2 rounded-md bg-light-blue-100 dark:bg-light-blue-dark-100 text-light-blue dark:text-light-blue-dark hover:bg-light-blue-200 dark:hover:bg-light-blue-dark-200 transition-colors"
-          >
-            &larr;
-          </NuxtLinkLocale>
-
-          <span class="text-black-400 dark:text-white-400 tabular-nums">
-            {{ page }} / {{ totalPages }}
-          </span>
-
-          <NuxtLinkLocale
-            v-if="hasNext"
-            :to="pageQuery(page + 1)"
-            rel="next"
-            class="px-3 py-2 rounded-md bg-light-blue-100 dark:bg-light-blue-dark-100 text-light-blue dark:text-light-blue-dark hover:bg-light-blue-200 dark:hover:bg-light-blue-dark-200 transition-colors"
-          >
-            &rarr;
-          </NuxtLinkLocale>
-        </nav>
+        <BasePagination
+          :page="page"
+          :total-pages="totalPages"
+          :path="`/category/${category}`"
+          :label="$t('meta.category_news')"
+        />
       </section>
 
       <!-- <GroupBusiness transparent-bg /> -->

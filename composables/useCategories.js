@@ -15,9 +15,7 @@ export default function () {
     }
     loading.value = true;
     try {
-      const { data, error: fetchError } = await useMyFetch("/categories/list", {
-        transform: (data) => data.results,
-      });
+      const { data, error: fetchError } = await useCategoryList();
       if (fetchError.value) throw fetchError.value;
       categories.value.categories = data.value || [];
       categories.value.lang = locale.value;

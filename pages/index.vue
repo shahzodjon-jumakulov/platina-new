@@ -1,20 +1,9 @@
 <script setup>
 import Hero from "~/components/Section/Main/Hero.vue";
-import Articles from "~/components/Section/Main/Articles.vue";
-import Interview from "~/components/Section/Main/Interview.vue";
-import Popular from "~/components/Section/Main/Popular.vue";
-
-const news = ref([]);
-const { data } = await useMyFetch("/news/all/", {
-  params: { categories: "tahlil", limit: 4 },
-  server: false,
-  lazy: true,
-  onResponse({ response }) {
-    if (response._data?.results?.length) {
-      news.value = response._data.results;
-    }
-  },
-});
+// The Articles / Interview / Popular / "tahlil" CardSlider sections are
+// switched off below; their imports and the "tahlil" fetch that fed the
+// slider (an extra browser request per visit whose result was never shown)
+// were removed with them. Restore from git history if they come back.
 
 const { webpageSchema } = useSchemaProperties();
 

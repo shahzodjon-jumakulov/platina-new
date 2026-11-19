@@ -1,39 +1,18 @@
-@font-face {
-  font-family: "SF Pro Display";
-  src: url("./SFProDisplay-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "SF Pro Display";
-  src: url("./SFProDisplay-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "SF Pro Display";
-  src: url("./SFProDisplay-Semibold.ttf") format("truetype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "SF Pro Display";
-  src: url("./SFProDisplay-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-
+/*
+ * Google Sans, subset to Latin + Cyrillic and compressed to WOFF2
+ * (~57 KB per weight instead of ~2 MB TTF). Rebuild with scripts/subset-fonts.sh.
+ *
+ * File names are case-sensitive on the Linux server: the old
+ * `GoogleSans-Semibold.ttf` reference (file is `SemiBold`) built fine on macOS
+ * but on the VPS was left as a relative URL, so every page requested
+ * /<path>/static/GoogleSans-Semibold.ttf and got a 404.
+ *
+ * The SF Pro Display faces were declared but never used by any rule, and have
+ * been removed.
+ */
 @font-face {
   font-family: "Google Sans";
-  src: url("./static/GoogleSans-Regular.ttf") format("truetype");
+  src: url("./GoogleSans-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -41,7 +20,7 @@
 
 @font-face {
   font-family: "Google Sans";
-  src: url("./static/GoogleSans-Medium.ttf") format("truetype");
+  src: url("./GoogleSans-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -49,7 +28,7 @@
 
 @font-face {
   font-family: "Google Sans";
-  src: url("./static/GoogleSans-Semibold.ttf") format("truetype");
+  src: url("./GoogleSans-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -57,9 +36,23 @@
 
 @font-face {
   font-family: "Google Sans";
-  src: url("./static/GoogleSans-Bold.ttf") format("truetype");
+  src: url("./GoogleSans-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
+/*
+ * Metric-matched fallback shown until Google Sans arrives, so the swap does
+ * not reflow the text (CLS). Values computed from Google Sans Regular vs.
+ * Arial: average advance width over Uzbek Latin + Cyrillic text, hhea
+ * ascent/descent/lineGap.
+ */
+@font-face {
+  font-family: "Google Sans Fallback";
+  src: local("Arial"), local("ArialMT"), local("Helvetica Neue"), local("Roboto");
+  size-adjust: 101.96%;
+  ascent-override: 94.74%;
+  descent-override: 28.05%;
+  line-gap-override: 0%;
+}

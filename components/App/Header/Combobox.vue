@@ -77,7 +77,7 @@ watch(searchTerm, async () => {
     clearTimeout(debounceTimeout.value);
     debounceTimeout.value = setTimeout(async () => {
       const term = searchTerm.value.trim();
-      const { data } = await useMyFetch("/news/all", {
+      const { data } = await useMyFetch("/news/all/", {
         params: { search: term, limit: 6 },
       });
       if (searchTerm.value === term) {

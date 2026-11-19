@@ -14,10 +14,13 @@ export const useMyFetch = async (request, opts) => {
       }/api${request}`,
     {
       baseURL: config.public.baseURL,
-      onResponse({ request, response }) {
-        // console.log(request);
-        // console.log(response);
-      },
+      // SSR must not hang on a stuck CMS: give up and let the page answer 503
+      // (composables/throwApiError.js) instead of holding the connection
+      // until nginx times out.
+      timeout: import.meta.server ? 10000 : 15000,
+      // No automatic retry during SSR: when the CMS is overloaded a retry
+      // only doubles the load. The browser keeps ofetch's single retry.
+      ...(import.meta.server && { retry: 0 }),
       ...opts,
     }
   );

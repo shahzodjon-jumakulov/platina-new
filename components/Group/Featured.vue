@@ -7,11 +7,14 @@ if (
   news.value.news.length < 4 ||
   news.value.time < Date.now() - 1000 * 60 * 5
 ) {
-  const { data } = await useMyFetch("/news/all/", {
+  const { data, error } = await useMyFetch("/news/all/", {
     params: { is_pinned: true, limit: 4 },
     transform: (data) => data.results,
   });
-  news.value = { lang: locale.value, news: data.value, time: Date.now() };
+  // CMS down or timing out: a 503 the crawler retries, not a 500 render
+  // crash (and not an empty home page served with 200).
+  if (error.value) throwApiError(error.value);
+  news.value = { lang: locale.value, news: data.value || [], time: Date.now() };
 }
 const pinned = ref(news.value.news[0] || null);
 const remaining = ref(news.value.news.slice(1, 4) || []);
@@ -24,6 +27,7 @@ useSchemaOrg(schemaNodes);
 <template>
   <div class="flex flex-col gap-4">
     <NuxtLinkLocale
+      v-if="pinned"
       :to="useNewsUrl(pinned.publish, pinned.slug)"
       @click="storeSelected(pinned)"
       class="bg-light-blue-100 dark:bg-light-blue-dark-100 rounded-2xl group"

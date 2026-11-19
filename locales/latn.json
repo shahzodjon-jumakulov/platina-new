@@ -42,6 +42,7 @@
   },
   "error": {
     "title": "Bunday sahifa mavjud emas :(",
+    "unavailable": "Sayt vaqtincha ishlamayapti, bir necha daqiqadan so‘ng qayta urinib ko‘ring",
     "back": "Asosiy sahifaga o‘ting",
     "otherNews": "Yoki boshqa yangiliklar bilan tanishing:"
   },

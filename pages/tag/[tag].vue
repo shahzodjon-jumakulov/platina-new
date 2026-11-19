@@ -1,12 +1,30 @@
 <script setup>
+// Remount per ?page= so each archive page behaves like a real document (and
+// the router scrolls to the top); the latest/popular tab switch stays in place.
+definePageMeta({
+  key: (route) => `${route.path}?page=${route.query.page || 1}`,
+});
+
 const route = useRoute();
+const { t } = useI18n();
 const { tag } = route.params;
 const { popular } = route.query;
-const term = ref(tag ? decodeURIComponent(tag) : null);
+const safeDecode = (value) => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+const term = ref(tag ? safeDecode(tag) : null);
+
+const PER_PAGE = 12;
+const page = Math.max(1, Number(route.query.page) || 1);
+const pageSuffix = page > 1 ? ` — ${page}` : "";
 useSeoMeta({
-  title: `${term.value} | Platina.uz`,
-  ogTitle: `${term.value} | Platina.uz`,
-  twitterTitle: `${term.value} | Platina.uz`,
+  title: `${term.value}${pageSuffix} | Platina.uz`,
+  ogTitle: `${term.value}${pageSuffix} | Platina.uz`,
+  twitterTitle: `${term.value}${pageSuffix} | Platina.uz`,
 });
 
 const activeTab = ref(popular ? 1 : 0);
@@ -28,25 +46,34 @@ watch(activeTab, (val) => {
   }
 });
 
-const { data } = await useMyFetch("/news/all", {
+const { data, error } = await useMyFetch("/news/all/", {
   params: {
     tags: tag,
-    limit: 12,
+    limit: PER_PAGE,
+    offset: (page - 1) * PER_PAGE,
     ordering: popular ? "-number_of_views" : "",
   },
 });
+
+// A tag with no articles (or a ?page= past the end) is a 404, not an empty
+// 200 page ("soft 404"). A CMS failure is a 503 — see throwApiError.
+if (error.value || !data.value?.results?.length) {
+  throwApiError(error.value);
+}
+
 const next = ref(data.value?.next || null);
 const news = ref(data.value?.results || []);
+const totalPages = Math.max(1, Math.ceil((data.value?.count || 0) / PER_PAGE));
 const loading = ref(false);
 const tempNews = ref([]);
 const tempNext = ref(null);
 
 const initNews = async (isPopular = false) => {
   loading.value = true;
-  const { data: newData } = await useMyFetch("/news/all", {
+  const { data: newData } = await useMyFetch("/news/all/", {
     params: {
       tags: tag,
-      limit: 12,
+      limit: PER_PAGE,
       ordering: isPopular ? "-number_of_views" : "",
     },
   });
@@ -55,8 +82,8 @@ const initNews = async (isPopular = false) => {
   loading.value = false;
 };
 watch(
-  () => route.query,
-  (newVal) => initNews(newVal.popular)
+  () => route.query.popular,
+  (isPopular) => initNews(isPopular)
 );
 
 const loadMore = async () => {
@@ -144,6 +171,14 @@ onMounted(() => {
             block
             @click="showMore"
             :loading="loading"
+          />
+
+          <BasePagination
+            v-if="!popular"
+            :page="page"
+            :total-pages="totalPages"
+            :path="`/tag/${encodeURIComponent(term)}`"
+            :label="term"
           />
         </div>
       </div>

@@ -27,7 +27,7 @@ watch(activeTab, (val) => {
   }
 });
 
-const { data } = await useMyFetch("/news/all", {
+const { data } = await useMyFetch("/news/all/", {
   params: {
     search: q,
     limit: 12,
@@ -44,7 +44,7 @@ const tempNext = ref(null);
 const initNews = async (isPopular = false) => {
   const query = route.query.q;
   loading.value = true;
-  const { data: newData } = await useMyFetch("/news/all", {
+  const { data: newData } = await useMyFetch("/news/all/", {
     params: {
       search: query,
       limit: 12,

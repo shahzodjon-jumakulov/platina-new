@@ -7,6 +7,10 @@
 </template>
 
 <script setup>
+// Body text weight; preloaded so the first paint can use it (the other
+// weights load on demand, with a metric-matched fallback meanwhile).
+import fontRegular from "~/assets/fonts/GoogleSans-Regular.woff2";
+
 const { t, locale } = useI18n();
 const colorMode = useColorMode();
 const route = useRoute();
@@ -53,6 +57,13 @@ const { relAlternate } = useRelAlternate(
 // on whichever page was server-rendered first.
 const links = computed(() => [
   { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+  {
+    rel: "preload",
+    as: "font",
+    type: "font/woff2",
+    href: fontRegular,
+    crossorigin: "",
+  },
   // The API and every article image are served from this origin.
   { rel: "preconnect", href: "https://cp.platina.uz", crossorigin: "" },
   { rel: "dns-prefetch", href: "https://cp.platina.uz" },
@@ -68,7 +79,11 @@ const links = computed(() => [
 useHead({
   htmlAttrs: { lang: lang },
   link: links,
-  meta: [{ name: "theme-color", content: themeColor }],
+  meta: [
+    { name: "theme-color", content: themeColor },
+    // Lets Google show large image previews (Discover, Top Stories).
+    { name: "robots", content: "max-image-preview:large" },
+  ],
   script: [
     {
       // www.uz national counter. Rewritten from the five legacy
@@ -117,10 +132,12 @@ useSeoMeta({
   twitterTitle: t("meta.title"),
   twitterDescription: t("meta.desc"),
   twitterCard: "summary_large_image",
-  ogImage: "/platina.jpg",
-  twitterImage: "/platina.jpg",
+  // Must be absolute: Facebook, Telegram and X don't resolve relative URLs.
+  ogImage: "https://platina.uz/platina.jpg",
+  twitterImage: "https://platina.uz/platina.jpg",
   // twitterSite: "@platinauz",
-  ogUrl: "https://platina.uz/",
+  // The page's canonical URL (was the home page URL on every page).
+  ogUrl: () => relAlternate.value[0]?.href,
   colorScheme: "light dark",
   ogLocale: lang.value,
   ogLocaleAlternate: [langAlternate.value],

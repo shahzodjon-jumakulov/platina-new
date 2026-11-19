@@ -1,22 +1,43 @@
 <script setup>
+// Remount per ?page= so each archive page behaves like a real document.
+definePageMeta({
+  key: (route) => route.fullPath,
+});
+
 const route = useRoute();
 const { t } = useI18n();
 const { posts } = route.params;
 const titles = { popular: "popular_news", pinned: "pinned_news" };
 const title = t(titles[posts] || "latest");
-useSeoMeta({
-  title: `${title} | Platina.uz`,
-  ogTitle: `${title} | Platina.uz`,
-  twitterTitle: `${title} | Platina.uz`,
-})
 
-const endpoint = posts === "popular" ? "/news/popular" : "/news/all";
-const { data } = await useMyFetch(endpoint, {
-  params: { limit: 12, ...(posts === "pinned" && { is_pinned: true }) },
+const PER_PAGE = 12;
+const page = Math.max(1, Number(route.query.page) || 1);
+const pageSuffix = page > 1 ? ` — ${page}` : "";
+useSeoMeta({
+  title: `${title}${pageSuffix} | Platina.uz`,
+  ogTitle: `${title}${pageSuffix} | Platina.uz`,
+  twitterTitle: `${title}${pageSuffix} | Platina.uz`,
 });
+
+const endpoint = posts === "popular" ? "/news/popular/" : "/news/all/";
+const { data, error } = await useMyFetch(endpoint, {
+  params: {
+    limit: PER_PAGE,
+    offset: (page - 1) * PER_PAGE,
+    ...(posts === "pinned" && { is_pinned: true }),
+  },
+});
+
+// CMS failure → 503; a ?page= past the end → 404 (not an empty 200 page).
+if (error.value) throwApiError(error.value);
+if (page > 1 && !data.value?.results?.length) throwApiError(null);
+
 const count = ref(data.value?.count || 0);
 const next = ref(data.value?.next || null);
 const news = ref(data.value?.results || []);
+// "Popular" is a rolling 7-day ranking: not worth paging for crawlers.
+const totalPages =
+  posts === "popular" ? 1 : Math.max(1, Math.ceil(count.value / PER_PAGE));
 const loading = ref(false);
 const tempNews = ref([]);
 const tempNext = ref(null);
@@ -101,6 +122,13 @@ onMounted(() => {
             block
             @click="showMore"
             :loading="loading"
+          />
+
+          <BasePagination
+            :page="page"
+            :total-pages="totalPages"
+            :path="`/posts/${posts}`"
+            :label="title"
           />
         </div>
       </div>

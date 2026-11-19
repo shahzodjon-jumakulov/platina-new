@@ -62,8 +62,8 @@ defineProps({
         <img
           :src="data.image_large"
           :alt="data.image_name || data.title"
-          width="1200"
-          height="800"
+          width="820"
+          height="546"
           fetchpriority="high"
           decoding="async"
           class="rounded-2xl w-full aspect-[3/2]"

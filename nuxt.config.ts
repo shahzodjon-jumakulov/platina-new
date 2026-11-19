@@ -23,6 +23,26 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    storage: {
+      // Backing store for defineCachedFunction / defineCachedEventHandler
+      // (Nitro keys them under the `cache` mount: cache:nitro:functions:…).
+      // The default is per-process memory, and pm2 runs one process per core,
+      // so every process rebuilt every sitemap on its own. A directory shared
+      // by all processes means one rebuild serves all of them, and the cache
+      // survives `pm2 restart`.
+      //
+      // A relative base resolves against the server's working directory at
+      // runtime (the app directory under pm2, like Nitro's own ./.data/kv).
+      // NITRO_CACHE_DIR is read at BUILD time — set it for `npm run build`,
+      // not for pm2. `.data/` is git-ignored.
+      cache: {
+        driver: "fs",
+        base: process.env.NITRO_CACHE_DIR || "./.data/cache",
+      },
+    },
+  },
+
   // NOTE: HTML route caching (swr/isr) is deliberately NOT enabled here.
   // @nuxtjs/i18n sets `Set-Cookie: i18n_redirected=<locale>` on every SSR
   // response, so a cached page would replay one visitor's locale cookie to

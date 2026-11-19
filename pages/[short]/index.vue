@@ -4,63 +4,57 @@ definePageMeta({
 });
 
 const config = useRuntimeConfig();
-const localePath = useLocalePath();
 const route = useRoute();
-const { short } = route.params;
-const { t } = useI18n();
 const langs = { uz: "uz-cyril", "o'z": "uz" };
 const cookieLang = useCookie("i18n_redirected").value;
 const lang = langs[cookieLang] || "uz-cyril";
 
 // This route is a root-level catch-all: every unmatched single-segment path
-// lands here. Unhandled fetch failures were surfacing as 500s for what are
-// really 404s, which suppressed crawling site-wide.
-const { data, error } = await useFetch(`${lang}/api/news/short_slug/${short}/`, {
-  baseURL: config.public.baseURL,
-});
+// lands here. Short links pasted with a stray trailing "\" or "/" (seen in
+// Search Console as /867d63\) are cleaned up rather than rejected.
+const short = String(route.params.short ?? "")
+  .trim()
+  .replace(/[\\/\s]+$/, "");
 
-if (error.value || !data.value?.slug) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Page not found",
-    fatal: true,
-  });
+// Short slugs are hex ids or legacy WordPress post ids; anything else cannot
+// be one, so it is a 404 without asking the CMS.
+if (!/^[0-9A-Za-z_-]{1,32}$/.test(short)) {
+  throwApiError(null);
 }
 
-const ogTitle = data.value.title || t("meta.title");
-const ogDesciption = htmlToText(data.value.short_content) || t("meta.desc");
-useSeoMeta({
-  title: ogTitle,
-  description: ogDesciption,
-  ogTitle: ogTitle,
-  ogDescription: ogDesciption,
-  twitterTitle: ogTitle,
-  twitterDescription: ogDesciption,
-  author: "Platina.uz",
-  ogType: "article",
-  ogUrl: "https://platina.uz" + route.path,
-  articlePublishedTime: data.value.publish,
-  articleTag: data.value.tags.join(", "),
-  articleSection: data.value.category.name,
-  creator: "Platina.uz",
-  twitterCard: "summary_large_image",
-  ogImage: data.value.image_large,
-  twitterImage: data.value.image_large,
-});
-
-const path = localePath(
-  useNewsUrl(data.value.publish, data.value.slug),
-  cookieLang
+const { data, error } = await useFetch(
+  `${lang}/api/news/short_slug/${short}/`,
+  {
+    baseURL: config.public.baseURL,
+    timeout: 10000,
+    ...(import.meta.server && { retry: 0 }),
+  }
 );
-// A real HTTP redirect rather than a client-side hop, so crawlers and link
-// shorteners follow it directly.
-//
-// 302, NOT 301: the target locale comes from the visitor's `i18n_redirected`
-// cookie, so the destination differs per reader. A 301 is cached permanently
-// by the browser, which would pin whoever loaded the link first to that script
-// forever — even after they switch language. Link equity still reaches the
-// article, because the article self-canonicalises.
-await navigateTo(path, { redirectCode: 302 });
+
+// 404 only for "no such short link"; a CMS outage is a 503.
+if (error.value || !data.value?.slug) {
+  throwApiError(error.value);
+}
+
+// Permanent redirect to the article's absolute canonical URL. Crawlers and
+// first-time visitors have no locale cookie and get the default (Cyrillic)
+// URL with a cacheable 301. A reader who has picked a script gets their
+// variant with a 302 — a 301 is cached by the browser forever and would pin
+// them to whichever script they had on first click.
+const path =
+  (cookieLang === "o'z" ? "/o'z" : "") +
+  useNewsUrl(data.value.publish, encodeURIComponent(data.value.slug));
+
+if (import.meta.server) {
+  useRequestEvent()?.node.res.setHeader("Vary", "Cookie");
+  await navigateTo("https://platina.uz" + path, {
+    redirectCode: cookieLang ? 302 : 301,
+    external: true,
+  });
+} else {
+  // In-app navigation (also keeps dev/staging on their own host).
+  await navigateTo(path, { replace: true });
+}
 </script>
 
 <template>

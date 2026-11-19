@@ -14,11 +14,12 @@ if (
   news.value.news.length < 6 ||
   news.value.time < Date.now() - 1000 * 60 * 5
 ) {
-  const { data } = await useMyFetch("/news/all/", {
+  const { data, error } = await useMyFetch("/news/all/", {
     params: { limit: 6 },
     transform: (data) => data.results,
   });
-  news.value = { lang: locale.value, news: data.value, time: Date.now() };
+  if (error.value) throwApiError(error.value);
+  news.value = { lang: locale.value, news: data.value || [], time: Date.now() };
 }
 
 // Popular is kept out of the initial render so the first paint stays a single

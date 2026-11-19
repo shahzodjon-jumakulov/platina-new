@@ -1,19 +1,27 @@
+/**
+ * The canonical path of an article: /YYYY/MM/DD/slug, month and day always
+ * zero-padded.
+ *
+ * `publish` is a naive Tashkent wall-clock timestamp ("2023-03-13T09:05:00").
+ * The date is sliced out of the string rather than read through `new Date()`,
+ * which would depend on the timezone of whatever runs it (UTC server vs. the
+ * reader's browser) and could move an article published near midnight to the
+ * neighbouring day. server/utils/feed.ts (sitemaps) does the same.
+ *
+ * Old sites linked unpadded dates (/2023/3/13/slug); the article page answers
+ * those with a 301 to this form.
+ */
 export const useNewsUrl = (publish, slug, locale) => {
-  // Check if publish is a valid date
-  if (!publish || isNaN(Date.parse(publish))) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(publish ?? "").trim());
+  if (!match) {
     throw new Error("Invalid publish date");
   }
 
-  // Check if slug is a valid string
   if (typeof slug !== "string" || slug.trim() === "") {
     throw new Error("Invalid slug");
   }
 
-  // Format the publish date and slug
-  const date = new Date(publish);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
+  const [, year, month, day] = match;
   const path = `/${year}/${month}/${day}/${slug}`;
 
   if (!locale) return path;

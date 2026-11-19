@@ -2,8 +2,11 @@
  * Shared helpers for the sitemap / news-sitemap / RSS routes.
  *
  * Everything is derived from the CMS API that the site already consumes, so
- * there is no second source of truth to keep in sync.
+ * there is no second source of truth to keep in sync. The data fetching and
+ * caching for the article archive lives in ./archive.ts.
  */
+import { createHash } from "node:crypto";
+import type { H3Event } from "h3";
 
 export const SITE = "https://platina.uz";
 
@@ -22,6 +25,10 @@ export const VARIANTS = [
 /** Latin is what people actually search in, so it takes x-default. */
 export const X_DEFAULT_PREFIX = "/o'z";
 
+/**
+ * Articles per `sitemap-articles.xml?p=N` file. Public contract: Google has
+ * these URLs, so changing it reshuffles every chunk. Keep it at 1000.
+ */
 export const ARTICLES_PER_CHUNK = 1000;
 
 /**
@@ -38,13 +45,20 @@ export const ARTICLES_PER_CHUNK = 1000;
  */
 export const SITEMAP_ORDERING = "publish";
 
-export interface Article {
+/** The minimum an article needs to appear in a sitemap. */
+export interface SitemapRow {
   slug: string;
-  title: string;
   publish: string;
+  /** Last edit, when the API provides it (the /api/news/sitemap/ endpoint does). */
+  modified?: string | null;
+}
+
+/** What the news sitemap and RSS need — a trimmed copy of the API object. */
+export interface FeedArticle extends SitemapRow {
+  title: string;
   short_content?: string;
   image_large?: string;
-  category?: { name: string; slug: string };
+  category?: { name: string };
 }
 
 /** Escapes text for use inside an XML element. */
@@ -59,20 +73,30 @@ export function xml(value: unknown): string {
 /**
  * `publish` arrives as a naive local timestamp ("2026-09-12T13:15:45").
  * Slice it rather than going through Date, so the path can never drift by a
- * day depending on the server's timezone.
+ * day depending on the server's timezone. Month and day stay zero-padded: that
+ * is the canonical form (utils/useNewsUrl.js builds the same path).
  */
-export function articlePath(article: Article): string {
+export function articlePath(article: SitemapRow): string {
   const [year, month, day] = article.publish.slice(0, 10).split("-");
   return `/${year}/${month}/${day}/${article.slug}`;
 }
 
-/** Uzbekistan has no DST, so the offset is always +05:00. */
-export function toIso(publish: string): string {
-  return `${publish}+05:00`;
+/**
+ * Naive Tashkent wall-clock time → W3C datetime. Uzbekistan has no DST, so
+ * the offset is always +05:00. Values that already carry an offset are kept.
+ */
+export function toIso(value: string): string {
+  const s = String(value).trim().replace(" ", "T").replace(/\.\d+/, "");
+  return /(Z|[+-]\d\d:?\d\d)$/i.test(s) ? s : `${s}+05:00`;
 }
 
 export function toRfc822(publish: string): string {
   return new Date(toIso(publish)).toUTCString();
+}
+
+/** The date Google should see as "last changed" for an article. */
+export function lastmodOf(row: SitemapRow): string {
+  return toIso(row.modified || row.publish);
 }
 
 /** Strips CMS HTML down to plain text for descriptions. */
@@ -84,103 +108,10 @@ export function stripHtml(html?: string): string {
     .trim();
 }
 
-interface FetchOptions {
-  limit?: number;
-  offset?: number;
-  api?: string;
-  ordering?: string;
-}
-
-export async function fetchArticles({
-  limit = ARTICLES_PER_CHUNK,
-  offset = 0,
-  api = "uz",
-  ordering,
-}: FetchOptions = {}): Promise<{ count: number; results: Article[] }> {
-  const response = await $fetch<{ count: number; results: Article[] }>(
-    `${CMS}/${api}/api/news/all/`,
-    {
-      params: ordering ? { limit, offset, ordering } : { limit, offset },
-      timeout: 30000,
-    }
-  );
-  return { count: response?.count ?? 0, results: response?.results ?? [] };
-}
-
-/**
- * Same as fetchArticles, but survives the handful of archive records that make
- * the CMS return 500 (as of this writing, four rows around offset 12120-12150).
- * A failing window is bisected down to single records so one bad row costs one
- * URL instead of the whole sitemap chunk.
- */
-export async function fetchArticlesResilient(options: FetchOptions = {}): Promise<
-  Article[]
-> {
-  const { limit = ARTICLES_PER_CHUNK, offset = 0, api = "uz", ordering } = options;
-
-  try {
-    const { results } = await fetchArticles({ limit, offset, api, ordering });
-    return results;
-  } catch (error) {
-    if (limit <= 1) {
-      console.warn(
-        `[sitemap] skipping unreadable article at offset ${offset} (${api}):`,
-        (error as Error)?.message
-      );
-      return [];
-    }
-
-    const half = Math.ceil(limit / 2);
-    const [first, second] = await Promise.all([
-      fetchArticlesResilient({ limit: half, offset, api, ordering }),
-      fetchArticlesResilient({
-        limit: limit - half,
-        offset: offset + half,
-        api,
-        ordering,
-      }),
-    ]);
-    return [...first, ...second];
-  }
-}
-
-/**
- * The publish date of the newest article in each chunk, for the sitemap index.
- *
- * Previously every entry carried `new Date()`, which told Google all 13 chunks
- * had just changed on every single read — the opposite of what lastmod is for.
- * Because chunks are ordered oldest-first, the real answer is the last article
- * in each chunk, and it's stable for every chunk but the final one.
- */
-export async function fetchChunkLastmods(count: number): Promise<(string | null)[]> {
-  const chunks = Math.max(1, Math.ceil(count / ARTICLES_PER_CHUNK));
-
-  return Promise.all(
-    Array.from({ length: chunks }, async (_, i) => {
-      const last = Math.min((i + 1) * ARTICLES_PER_CHUNK, count) - 1;
-      try {
-        const { results } = await fetchArticles({
-          limit: 1,
-          offset: Math.max(0, last),
-          ordering: SITEMAP_ORDERING,
-        });
-        return results[0]?.publish ? toIso(results[0].publish) : null;
-      } catch {
-        // A lastmod we can't determine is better omitted than faked.
-        return null;
-      }
-    })
-  );
-}
-
-export async function countArticles(): Promise<number> {
-  const { count } = await fetchArticles({ limit: 1 });
-  return count;
-}
-
 /** One <url> entry per script variant, cross-linked with xhtml:link alternates. */
-export function urlEntries(article: Article): string {
+export function urlEntries(article: SitemapRow): string {
   const path = articlePath(article);
+  const lastmod = xml(lastmodOf(article));
   const alternates = [
     ...VARIANTS.map(
       (v) =>
@@ -196,7 +127,7 @@ export function urlEntries(article: Article): string {
   return VARIANTS.map(
     (v) =>
       `<url><loc>${xml(SITE + v.prefix + path)}</loc>` +
-      `<lastmod>${xml(toIso(article.publish))}</lastmod>` +
+      `<lastmod>${lastmod}</lastmod>` +
       alternates +
       `</url>`
   ).join("");
@@ -221,8 +152,27 @@ export function urlsetDocument(body: string): string {
   );
 }
 
-export function sendXml(event: any, body: string, maxAge = 3600): string {
+/**
+ * Sends an XML body with a content-hash ETag, answering conditional requests
+ * (If-None-Match) with 304 so crawlers that re-check an unchanged file get
+ * an empty response.
+ */
+export function sendXml(event: H3Event, body: string, maxAge = 3600): string | undefined {
+  const etag = `"${createHash("sha1").update(body).digest("base64url").slice(0, 22)}"`;
   setHeader(event, "Content-Type", "application/xml; charset=utf-8");
-  setHeader(event, "Cache-Control", `public, max-age=${maxAge}`);
+  if (handleCacheHeaders(event, { etag, maxAge })) return;
   return body;
+}
+
+/**
+ * The CMS is down and there is nothing cached to fall back on. 503 + Retry-After
+ * tells crawlers to come back later without dropping anything; a 500 (what the
+ * old code produced) reads as "this site is broken".
+ */
+export function sendUnavailable(event: H3Event, retryAfter = 600): string {
+  setResponseStatus(event, 503, "Service Unavailable");
+  setHeader(event, "Retry-After", retryAfter);
+  setHeader(event, "Cache-Control", "no-store");
+  setHeader(event, "Content-Type", "text/plain; charset=utf-8");
+  return "Temporarily unavailable, please retry later.\n";
 }

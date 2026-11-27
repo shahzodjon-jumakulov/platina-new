@@ -8,7 +8,10 @@ const selectedNews = useSelectedNews();
 const { data, error } = await useMyFetch(
   `/news/${encodeURIComponent(slug)}/`,
   {
-    default: () => selectedNews.value || {},
+    // The clicked list item stands in for the article only if it carries the
+    // body: server-rendered lists are cut down (utils/leanNewsItem.js), and a
+    // title without its text is worse than the error page.
+    default: () => (selectedNews.value?.content ? selectedNews.value : {}),
     key: `news-${locale.value}-${slug}`,
   }
 );

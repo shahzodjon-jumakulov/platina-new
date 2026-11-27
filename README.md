@@ -81,4 +81,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 - Backend setup, restoring the DB and media, and the Telegram safety step:
   `LOCAL_DEV.md` in `github.com/shahzodjon-jumakulov/platina-back`
 - Known issues, including the sitemap load storm in `server/utils/feed.ts`: `ISSUES.md` (#3) in the same repo
-- Production: pm2 `ecosystem.config.cjs` (8 instances, port 3003); deploy with `npm ci && npm run build && pm2 restart platinauz`
+- Production: pm2 `ecosystem.config.cjs` (8 instances, 127.0.0.1:3003). Deploy with `git pull && scripts/deploy.sh`
+  (rollback: `scripts/deploy.sh rollback`), not `npm run build` + `pm2 restart`: the script builds next to the
+  live build, keeps earlier builds' `/_nuxt/*` files for 30 days (`.data/old-assets/`, see
+  `modules/keep-old-assets.ts`), keeps the old build as `.output.bak-<sha>/`, and does a plain `pm2 reload`.

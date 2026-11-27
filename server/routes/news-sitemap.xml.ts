@@ -5,9 +5,11 @@
  * Each article is listed once per script variant with its own localised
  * headline, so both can surface for their own audience.
  *
- * Data comes from the shared 5-minute cache (getLatestArticles). If the CMS is
- * down and nothing is cached, the variant is simply left out: a valid, shorter
- * file is better for Google than a 500.
+ * Data comes from the shared cache (getLatestArticles), never more than a
+ * minute old while the CMS answers, and browsers/crawlers may keep the file
+ * for a minute too. If the CMS is down, the last good list is served; with
+ * nothing cached the variant is simply left out: a valid, shorter file is
+ * better for Google than a 500.
  */
 const WINDOW_HOURS = 48;
 
@@ -61,6 +63,6 @@ export default defineEventHandler(async (event) => {
       `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">` +
       perVariant.join("") +
       `</urlset>`,
-    degraded ? 60 : 300
+    degraded ? 30 : 60
   );
 });

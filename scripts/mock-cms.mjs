@@ -22,6 +22,9 @@
  *   GET /__stats                      request counts per route, peak concurrency
  *   GET /__reset                      zero the counters
  *   GET /__config?sitemap=0&bad=10,11&delay=50
+ *   GET /__config?down=1              every API route answers 500 (CMS outage)
+ *   GET /__publish                    add an article published "now" (Tashkent
+ *                                     wall clock) — for freshness tests
  *
  * Fixture: an article with slug "konstitutsiyaviy-sud-test" published
  * 2023-03-13T09:05:00, for the padded/unpadded date redirect tests.
@@ -41,6 +44,7 @@ const config = {
   ),
   delay: Number(process.env.MOCK_DELAY_MS ?? 20),
   log: process.env.MOCK_LOG === "1",
+  down: false,
 };
 
 // ---------------------------------------------------------------- data ----
@@ -246,6 +250,8 @@ async function handle(req, res, url) {
   if (!m) return json(res, 404, { detail: "Not found." });
   const [, api, rest] = m;
 
+  if (config.down) return serverError(res);
+
   // Django's APPEND_SLASH: a slashless URL costs an extra 301 round trip
   // (except routes that are declared without one, like news/similar/<id>).
   if (!rest.endsWith("/") && !/^\/news\/similar\/\d+$/.test(rest)) {
@@ -332,7 +338,28 @@ const server = http.createServer(async (req, res) => {
     if (p.has("sitemap")) config.sitemap = p.get("sitemap") !== "0";
     if (p.has("bad")) config.bad = new Set(p.get("bad").split(",").filter(Boolean).map(Number));
     if (p.has("delay")) config.delay = Number(p.get("delay"));
+    if (p.has("down")) config.down = p.get("down") === "1";
     return json(res, 200, { ...config, bad: [...config.bad] });
+  }
+  if (url.pathname === "/__publish") {
+    const id = ARTICLES.length + 1;
+    const now = naive(Date.now() + 5 * 3600 * 1000);
+    const article = {
+      id,
+      position: ARTICLES.length, // newest
+      slug: `yangi-maqola-${id}`,
+      publish: now,
+      modified: now,
+      category: CATEGORIES[0],
+      tags: ["umumiy"],
+      is_pinned: false,
+      number_of_views: 0,
+      short_slug: id.toString(16).padStart(6, "0"),
+    };
+    ARTICLES.push(article);
+    BY_SLUG.set(article.slug, article);
+    BY_SHORT.set(article.short_slug, article);
+    return json(res, 200, { slug: article.slug, publish: now, count: ARTICLES.length });
   }
 
   // Placeholder article images (3:2, like the real ones), served late so that

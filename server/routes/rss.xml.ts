@@ -71,6 +71,8 @@ export default defineEventHandler(async (event) => {
       items +
       `</channel>` +
       `</rss>`,
-    degraded ? 60 : 600
+    // Same ≤ 1 min data as the news sitemap; feed readers and Telegram
+    // auto-posters should see a new article as soon as Google does.
+    degraded ? 30 : 60
   );
 });

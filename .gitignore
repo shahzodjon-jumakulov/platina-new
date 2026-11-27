@@ -1,5 +1,7 @@
 # Nuxt dev/build outputs
 .output
+# scripts/deploy.sh: .output.next (build in progress), .output.bak-<sha> (rollback)
+.output.*
 .data
 .nuxt
 .nitro

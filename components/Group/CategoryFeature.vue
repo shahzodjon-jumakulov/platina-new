@@ -9,19 +9,19 @@ const props = defineProps({
   },
 });
 
-const news = ref([]);
-
-await useMyFetch("/news/all/", {
+// Rendered on the server; see GroupCategoryGrid.
+const { data, error, refresh } = await useMyFetch("/news/all/", {
   key: `category-feature-${props.category}`,
   params: { categories: props.category, limit: 5 },
-  server: false,
   lazy: true,
-  onResponse({ response }) {
-    if (response._data?.results?.length) {
-      news.value = response._data.results;
-    }
-  },
+  timeout: import.meta.server ? 4000 : 15000,
+  transform: (data) => (data?.results || []).map(leanNewsItem),
 });
+onMounted(() => {
+  if (error.value) refresh();
+});
+
+const news = computed(() => data.value || []);
 
 const lead = computed(() => news.value[0]);
 const rest = computed(() => news.value.slice(1, 5));

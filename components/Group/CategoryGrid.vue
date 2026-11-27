@@ -9,19 +9,21 @@ const props = defineProps({
   },
 });
 
-const news = ref([]);
-
-await useMyFetch("/news/all/", {
+// Rendered on the server so the HTML (and Googlebot) gets the block's links.
+// The server gives the CMS 4 s; past that, or on a CMS error, the page goes
+// out without the block and the browser loads it, as it did before.
+const { data, error, refresh } = await useMyFetch("/news/all/", {
   key: `category-grid-${props.category}`,
   params: { categories: props.category, limit: 4 },
-  server: false,
   lazy: true,
-  onResponse({ response }) {
-    if (response._data?.results?.length) {
-      news.value = response._data.results;
-    }
-  },
+  timeout: import.meta.server ? 4000 : 15000,
+  transform: (data) => (data?.results || []).map(leanNewsItem),
 });
+onMounted(() => {
+  if (error.value) refresh();
+});
+
+const news = computed(() => data.value || []);
 
 const lead = computed(() => news.value[0]);
 const rest = computed(() => news.value.slice(1, 4));

@@ -32,12 +32,16 @@ export default defineEventHandler(async (event) => {
   let chunk: ChunkData;
   try {
     // Oldest-first: every chunk but the last is byte-stable as the newsroom
-    // publishes, so it is cached for a day (the last one for an hour). Only
+    // publishes, so it is cached for a day (the last one ≤ 10 min). Only
     // complete chunks exist in the cache; without one this is a 503.
     chunk = await getChunk(n, meta);
   } catch {
     return sendUnavailable(event);
   }
 
-  return sendXml(event, urlsetDocument(chunk.rows.map(urlEntries).join("")));
+  return sendXml(
+    event,
+    urlsetDocument(chunk.rows.map(urlEntries).join("")),
+    isLiveChunk(n, meta) ? 600 : 3600
+  );
 });

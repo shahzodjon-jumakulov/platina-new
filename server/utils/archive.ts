@@ -26,15 +26,23 @@
  *    the small lookups), and the
  *    back-off is recorded in the shared cache so all pm2 processes respect it.
  *  - Which endpoint works is remembered in the shared cache (archive meta,
- *    1 h), so the probe is not repeated on every request.
+ *    10 min), so the probe is not repeated on every request.
  *  - Never more than MAX_CONCURRENT_REQUESTS requests in flight per process,
  *    no automatic retries (ofetch retries 500s by default — disabled).
- *  - Results are cached with Nitro's defineCachedFunction in the `cache`
- *    storage mount, which nuxt.config.ts points at a directory shared by all
- *    pm2 processes. Stale-while-revalidate: a crawler is answered from the
- *    stale copy while one rebuild runs in the background, and a failed
- *    rebuild leaves the stale copy in place. Concurrent misses for the same
- *    key inside one process share a single rebuild (Nitro's `pending` map).
+ *  - Results are cached in the `cache` storage mount, which nuxt.config.ts
+ *    points at a directory shared by all pm2 processes. Concurrent misses for
+ *    the same key inside one process share a single rebuild.
+ *  - Two cache policies:
+ *      · frozen archive chunks, the index lastmods, categories: Nitro's
+ *        stale-while-revalidate (a crawler gets the stale copy while one
+ *        rebuild runs in the background). They rarely change, so age is free.
+ *      · everything that moves on every publish — the newest articles
+ *        (news-sitemap.xml, rss.xml, ≤ 1 min), the live chunk and the article
+ *        count (≤ 10 min): defineFreshCache, which never serves a copy older
+ *        than its maxAge while the CMS answers. Nitro's SWR has no upper bound
+ *        on age, so the first request after a quiet hour used to get the
+ *        hour-old list (news sitemap missing the latest 5-10 articles).
+ *    In both, a failed rebuild leaves the previous copy in place.
  */
 import {
   ARTICLES_PER_CHUNK,
@@ -44,6 +52,7 @@ import {
   type FeedArticle,
   type SitemapRow,
 } from "./feed";
+import { defineFreshCache } from "./fresh-cache";
 
 export type ArchiveMode = "sitemap" | "legacy";
 
@@ -176,10 +185,14 @@ async function probeMeta(): Promise<ArchiveMeta> {
   return { mode: "legacy", count: page.count };
 }
 
-/** Which endpoint to use and how many articles there are. Shared, 1 h. */
-export const getArchiveMeta = defineCachedFunction(
-  () => guarded("meta", probeMeta),
-  { name: "sitemap-meta", maxAge: 60 * 60, swr: true, getKey: () => "meta" }
+/**
+ * Which endpoint to use and how many articles there are. Shared, ≤ 10 min old:
+ * the count decides how many chunks exist and which one is live, so a stale
+ * count would hide a newly started chunk. One tiny request.
+ */
+export const getArchiveMeta = defineFreshCache(
+  { name: "sitemap-meta", maxAge: 10 * 60, getKey: () => "meta" },
+  () => guarded("meta", probeMeta)
 );
 
 export function chunkCount(count: number): number {
@@ -297,12 +310,19 @@ const getFrozenChunk = defineCachedFunction(
   { name: "sitemap-chunk-frozen", maxAge: 24 * 60 * 60, ...chunkCacheOptions }
 );
 
-/** The last chunk receives every new article: 1 h. */
-const getLiveChunk = defineCachedFunction(
+/**
+ * The last chunk receives every new article: ≤ 10 min old. With the
+ * /api/news/sitemap/ endpoint that is one light request per rebuild.
+ */
+const getLiveChunk = defineFreshCache<[n: number, mode: ArchiveMode, total: number], ChunkData>(
+  { name: "sitemap-chunk-live", maxAge: 10 * 60, getKey: chunkKey },
   (n: number, mode: ArchiveMode, total: number) =>
-    guarded(`chunk ${mode} ${n}`, () => buildChunk(n, mode, total), CHUNK_FAILURE_BACKOFF_MS),
-  { name: "sitemap-chunk-live", maxAge: 60 * 60, ...chunkCacheOptions }
+    guarded(`chunk ${mode} ${n}`, () => buildChunk(n, mode, total), CHUNK_FAILURE_BACKOFF_MS)
 );
+
+export function isLiveChunk(n: number, meta: ArchiveMeta): boolean {
+  return n === chunkCount(meta.count) - 1;
+}
 
 /**
  * Chunk `n` (0-based), complete, from the shared cache. Throws when there is
@@ -314,13 +334,28 @@ const getLiveChunk = defineCachedFunction(
  * rebuilt from the endpoint in the background (better lastmods, one request).
  */
 export async function getChunk(n: number, meta: ArchiveMeta): Promise<ChunkData> {
-  const get = n < chunkCount(meta.count) - 1 ? getFrozenChunk : getLiveChunk;
-  const chunk = await get(n, meta.mode, meta.count);
-  if (chunk.mode !== meta.mode && meta.mode === "sitemap") {
+  const upgradeable = (chunk: ChunkData) =>
+    chunk.mode !== meta.mode && meta.mode === "sitemap";
+
+  if (isLiveChunk(n, meta)) {
+    const chunk = await getLiveChunk(n, meta.mode, meta.count);
+    if (upgradeable(chunk)) getLiveChunk.refresh(n, meta.mode, meta.count).catch(() => {});
+    return chunk;
+  }
+
+  const chunk = await getFrozenChunk(n, meta.mode, meta.count);
+  if (upgradeable(chunk)) {
     upgrade.add(n);
-    get(n, meta.mode, meta.count).catch(() => {});
+    getFrozenChunk(n, meta.mode, meta.count).catch(() => {});
   }
   return chunk;
+}
+
+/** Newest lastmod (edit, else publish) among a chunk's articles. */
+export function chunkLastmod(chunk: ChunkData): string | null {
+  let newest: string | null = null;
+  for (const row of chunk.rows) newest = maxIso(newest, lastmodOf(row));
+  return newest;
 }
 
 // --------------------------------------------------------------- index ----
@@ -430,10 +465,15 @@ async function fetchLatest(api: string): Promise<FeedArticle[]> {
   }));
 }
 
-/** Shared by news-sitemap.xml (both variants) and rss.xml (Latin). 5 min. */
-export const getLatestArticles = defineCachedFunction(
-  (api: string) => guarded(`latest ${api}`, () => fetchLatest(api)),
-  { name: "latest-articles", maxAge: 5 * 60, swr: true, getKey: (api: string) => api }
+/**
+ * Shared by news-sitemap.xml (both variants), rss.xml (Latin) and the sitemap
+ * index. Never more than a minute old while the CMS answers, so an article is
+ * in the news sitemap within ~1 min of going live. A rebuild is one request
+ * (~2 s, ~370 kB for 100 articles) and only happens when someone asks.
+ */
+export const getLatestArticles = defineFreshCache(
+  { name: "latest-articles", maxAge: 60, getKey: (api: string) => api },
+  (api: string) => guarded(`latest ${api}`, () => fetchLatest(api))
 );
 
 // ---------------------------------------------------------- categories ----

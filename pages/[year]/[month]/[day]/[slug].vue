@@ -43,6 +43,26 @@ if (redirecting) {
   );
 }
 
+// The article photo is the LCP element on phones (SectionDetail renders it
+// with fetchpriority="high"). The <img> sits after ~120 KB of inline CSS and
+// the header markup; preloading it from the top of <head> (tagPriority 21:
+// right after the cp.platina.uz preconnect, before the inline styles) starts
+// the download with the first packet. Video articles show the YouTube
+// placeholder instead, so there is nothing to preload.
+if (!redirecting && data.value.image_large && !data.value.youtube_link) {
+  useHead({
+    link: [
+      {
+        rel: "preload",
+        as: "image",
+        href: data.value.image_large,
+        fetchpriority: "high",
+        tagPriority: 21,
+      },
+    ],
+  });
+}
+
 // The CMS is adding `image_original` (full resolution) to the detail
 // response; until it ships, image_large (820×546) is the best there is.
 const shareImage = data.value.image_original || data.value.image_large;

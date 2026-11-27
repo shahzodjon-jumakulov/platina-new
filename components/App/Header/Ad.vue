@@ -5,6 +5,27 @@
 // New campaign → new file names, so browsers don't keep the old one cached.
 const desktopBanner = "/images/tcm/tcm-2027-desktop.webp";
 const mobileBanner = "/images/tcm/tcm-2027-mobile.webp";
+
+// From 768 px up this banner is the largest element on the first screen of
+// every page, i.e. the desktop LCP element. As a plain <img> it was
+// discovered after the inline CSS and fetched at medium priority, queued
+// behind the module preloads on the same HTTP/1.1 connections. The `media`
+// attribute keeps phones (where the article photo is the LCP) from fetching
+// it. tagPriority 21 puts it right after the preconnects, before the inline
+// styles.
+useHead({
+  link: [
+    {
+      rel: "preload",
+      as: "image",
+      type: "image/webp",
+      href: desktopBanner,
+      media: "(min-width: 768px)",
+      fetchpriority: "high",
+      tagPriority: 21,
+    },
+  ],
+});
 </script>
 
 <template>

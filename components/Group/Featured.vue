@@ -19,6 +19,25 @@ if (
 const pinned = ref(news.value.news[0] || null);
 const remaining = ref(news.value.news.slice(1, 4) || []);
 
+// The pinned story's photo is the LCP element on phones. The <img> sits after
+// ~120 KB of inline CSS and the header markup, so the browser only found it
+// once ~30 KB of gzipped HTML had arrived. Preloading it from the top of
+// <head> (tagPriority 21: right after the cp.platina.uz preconnect, before
+// the inline styles) starts the download with the first packet.
+if (pinned.value?.image_large) {
+  useHead({
+    link: [
+      {
+        rel: "preload",
+        as: "image",
+        href: pinned.value.image_large,
+        fetchpriority: "high",
+        tagPriority: 21,
+      },
+    ],
+  });
+}
+
 const { generateItemList } = useSchemaProperties();
 const schemaNodes = generateItemList(news.value.news, t("pinned_news"));
 useSchemaOrg(schemaNodes);
